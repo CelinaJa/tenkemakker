@@ -659,7 +659,7 @@ async function sendExplain(){
   S.history.push({role:"user", content:txt});
   const t = TASKS[S.i];
   let res = null;
-  if(sampleFn){
+  if(sampleFn || backend){
     const thinking = el("div","msg m thinking","Makker tenker …"); $("chat").append(thinking); scrollChat();
     try{ res = await askClaude(t); }catch(e){ res = null; if(e && (e.code==="not_granted"||e.code==="sampling_disabled")) setLive(false); }
     thinking.remove();
@@ -691,7 +691,11 @@ async function hintReply(txt){
   S.history.push({role:"user", content:txt});
   const t = TASKS[S.i];
   let reply = null;
-  if(sampleFn){
+  if(backend && !sampleFn){
+    const thinking = el("div","msg m thinking","Makker tenker …"); $("chat").append(thinking); scrollChat();
+    try{ const r = await callBackend({mode:"hint", task:S.i, hint:S.hint, history:S.history}); reply = r && r.reply ? String(r.reply) : null; }catch(e){}
+    thinking.remove();
+  } else if(sampleFn){
     const thinking = el("div","msg m thinking","Makker tenker …"); $("chat").append(thinking); scrollChat();
     try{
       const convo = S.history.map(h => (h.role==="user"?"Ida: ":"Makker: ") + h.content).join("\n");
@@ -738,16 +742,31 @@ $("next").onclick = () => {
 };
 
 // ---------- Ekte Claude når siden kjører som artefakt ----------
-let sampleFn = null;
+let sampleFn = null, backend = false;
 function setLive(on){
   const p=$("mode-pill"); p.textContent = on ? "Ekte KI" : "Øvingsmodus"; p.className = "mode-pill" + (on?" live":"");
-  if(!on) sampleFn = null;
+  if(!on){ sampleFn = null; backend = false; }
 }
 (async()=>{
   try{ if(window.claude && claude.use){ const s = await claude.use("sample"); if(s){ sampleFn = s; setLive(true); } } }catch(e){}
 })();
+// Egen server (Cloudflare): /api/makker holder API-nøkkelen, siden har ingen hemmeligheter
+async function callBackend(body){
+  const r = await fetch("/api/makker", {method:"POST", headers:{"content-type":"application/json"}, credentials:"same-origin", body:JSON.stringify(body)});
+  if(!r.ok) throw new Error("backend " + r.status);
+  return r.json();
+}
+(async()=>{
+  if(!/^https?:$/.test(location.protocol) || window.claude) return;
+  try{ const r = await fetch("/api/health", {credentials:"same-origin"}); if(r.ok){ const j = await r.json(); if(j && j.ai){ backend = true; setLive(true); } } }catch(e){}
+})();
 
 async function askClaude(t){
+  if(!sampleFn && backend){
+    const r = await callBackend({mode:"teach", task:S.i, history:S.history});
+    if(!r || typeof r.reply!=="string") return null;
+    return {reply:r.reply, understood:!!r.understood, summary:String(r.summary||"")};
+  }
   const convo = S.history.map(h => (h.role==="user"?"Ida: ":"Makker: ") + h.content).join("\n");
   const prompt =
 `Du spiller «Makker», en vennlig og litt morsom KI-læringsmakker for Ida (13 år, 8. trinn). Nå er rollene byttet: Ida er læreren og forklarer for Makker, som har misforstått.
