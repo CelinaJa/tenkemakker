@@ -339,6 +339,8 @@ h2.sec{font-family:var(--f-game);font-weight:400;font-size:1.4rem;margin:0;lette
             <summary>Lyd</summary>
             <div class="settings-pop">
               <label class="toggle"><input type="checkbox" id="speak-toggle" checked> Makker leser høyt</label>
+              <label class="toggle"><input type="checkbox" id="voice-toggle"> Snakk i stedet for å skrive</label>
+              <p class="note" style="white-space:normal;max-width:230px">Tale er av som standard. Slår du den på, sendes lyden til Google for å bli gjort om til tekst. Makkers opplesning skjer bare på enheten.</p>
               <label class="toggle">Tale
                 <select id="sr-lang" aria-label="Talespråk">
                   <option value="nb-NO">Norsk (nb-NO)</option>
@@ -353,8 +355,8 @@ h2.sec{font-family:var(--f-game);font-weight:400;font-size:1.4rem;margin:0;lette
         <div class="teach" id="teach" hidden>
           <div class="chips" id="chips"></div>
           <div class="composer">
-            <button class="mic" id="mic" type="button" aria-label="Snakk til Makker"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4M8.5 21h7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg><span id="mic-label" class="sr">Snakk</span></button>
-            <textarea id="explain" rows="1" placeholder="Trykk på mikrofonen og snakk …" aria-label="Ditt svar til Makker"></textarea>
+            <button class="mic" id="mic" type="button" hidden aria-label="Snakk til Makker"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4M8.5 21h7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg><span id="mic-label" class="sr">Snakk</span></button>
+            <textarea id="explain" rows="1" placeholder="Skriv svaret ditt …" aria-label="Ditt svar til Makker"></textarea>
             <button class="send" id="send" type="button" aria-label="Send til Makker"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           </div>
           <p class="note" id="mic-note" hidden></p>
@@ -493,7 +495,7 @@ const BADGES = [
   {id:"self", name:"Tenkte selv", desc:"Løs en oppgave uten hint", ico:"!", c:"--violet"},
   {id:"teach", name:"Læreren", desc:"Lær Makker noe nytt", ico:"L", c:"--mint"},
   {id:"grit", name:"Står på", desc:"Bruk alle tre hint og løs likevel", ico:"3", c:"--coral"},
-  {id:"voice", name:"Snakket ut", desc:"Forklar med stemmen", ico:"~", c:"--sun-dk"},
+  {id:"first", name:"Krystallklar", desc:"Makker skjønte det på første forklaring", ico:"1", c:"--sun-dk"},
   {id:"loud", name:"Tenker høyt", desc:"Svar Makker på et hint", ico:"?", c:"--violet-dk"},
   {id:"all", name:"Tre på rad", desc:"Fullfør alle dagens oppgaver", ico:"3", c:"--mint-dk"}
 ];
@@ -622,7 +624,9 @@ let voice = null;
 function pickVoice(){
   try{
     const vs = speechSynthesis.getVoices();
-    voice = vs.find(v=>/^(nb|no|nn)\b/i.test(v.lang)) || vs.find(v=>/norsk|norw|bokm/i.test(v.name)) || null;
+    // Bare stemmer som kjører på enheten (localService), så ingen tekst sendes ut
+    const local = vs.filter(v=>v.localService);
+    voice = local.find(v=>/^(nb|no|nn)\b/i.test(v.lang)) || local.find(v=>/norsk|norw|bokm/i.test(v.name)) || null;
   }catch(e){}
 }
 try{ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }catch(e){}
@@ -707,7 +711,7 @@ $("stuck").onclick = () => {
   makker(lead + h + tail, "");
   S.mode = "hint"; S.tries = 0;
   S.history = [{role:"assistant", content: lead + h}];
-  $("explain").placeholder = "Snakk eller skriv svaret ditt …";
+  $("explain").placeholder = voiceOn() ? "Snakk eller skriv svaret ditt …" : "Skriv svaret ditt …";
   $("teach").hidden = false; $("explain").value = ""; grow(); hintChips();
   if(!isMobile()) $("explain").focus();
 };
@@ -743,7 +747,7 @@ function startTeaching(){
   const t = TASKS[S.i];
   S.teaching = true; S.tries = 0; S.mode = "teach";
   S.history = [{role:"assistant", content:t.wrong}];
-  $("explain").placeholder = "Forklar med egne ord, trykk på mikrofonen …";
+  $("explain").placeholder = voiceOn() ? "Forklar med egne ord, eller trykk på mikrofonen …" : "Forklar med egne ord …";
   setChips([["Fordi …", ()=>starter("Fordi ")], ["Tenk på det som …", ()=>starter("Tenk på det som ")], ["Først må du …", ()=>starter("Først må du ")]]);
   sys(`Rollebytte! Lær Makker det, og få +${TEACH_TP} TP`);
   makker(t.wrong, "confused");
@@ -753,7 +757,6 @@ function startTeaching(){
 async function sendExplain(){
   const txt = $("explain").value.trim();
   if(!txt) return;
-  if(usedVoice){ unlock("voice"); usedVoice = false; }
   if(S.mode==="hint" && !S.solved){ return hintReply(txt); }
   if(!S.teaching) return;
   stopMic();
@@ -777,6 +780,7 @@ async function sendExplain(){
     confetti();
     award(TEACH_TP, "Lærer-bonus", $("send"));
     unlock("teach");
+    if(S.tries===1) unlock("first");
     $("next").hidden = false;
     if(S.i < TASKS.length-1){ $("next").textContent = "Neste oppgave"; }
     else { $("next").textContent = "Se forelderkortet"; unlock("all"); setTimeout(()=>toast("Alle tre ferdig. Sterkt jobba!"), 1800); }
@@ -894,10 +898,19 @@ Svar KUN med JSON: {"reply":"...","understood":true|false,"summary":"..."}`;
 
 // ---------- Tale inn (Google Chrome / Edge når filen åpnes lokalt) ----------
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+// Tale inn er AV som standard (personvern): lyd sendes til Google når den brukes
+function voiceOn(){ return $("voice-toggle").checked; }
+$("voice-toggle").onchange = () => {
+  $("mic").hidden = !voiceOn();
+  if(!voiceOn()) stopMic();
+  const e=$("explain"); if(e.placeholder.startsWith("Skriv") && voiceOn()) e.placeholder = "Snakk eller skriv svaret ditt …";
+  else if(!voiceOn()) e.placeholder = S.mode==="teach" ? "Forklar med egne ord …" : "Skriv svaret ditt …";
+};
 let rec = null, listening = false, baseText = "", usedVoice = false;
 function micNote(t){ $("mic-note").hidden = !t; $("mic-note").textContent = t||""; }
 function stopMic(){ if(rec && listening){ try{ rec.stop(); }catch(e){} } }
 $("mic").onclick = () => {
+  if(!voiceOn()) return;
   if(!SR){ micNote("Tale virker i Google Chrome eller Edge. Skriv i feltet i stedet."); return; }
   if(listening){ stopMic(); return; }
   try{ speechSynthesis.cancel(); }catch(e){}

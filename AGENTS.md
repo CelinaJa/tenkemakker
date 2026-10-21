@@ -32,8 +32,8 @@ Open decisions are tracked in a live decision board (Claude artifact, linked in 
    - *Local file*: scripted replies using keyword lists per task. Shows "Øvingsmodus".
    Every AI feature needs a scripted fallback.
 6. **Voice** uses the browser Web Speech API only (no keys, no installs):
-   - Speech-to-text: `SpeechRecognition`, language selectable (`nb-NO` / `no-NO` / `nn-NO`). Works in Google Chrome/Edge on a local file; blocked inside the artifact frame — degrade to typing with a clear message.
-   - Text-to-speech: `speechSynthesis` with a Norwegian voice only. If none is installed, stay silent and say so once (never read Norwegian with an English voice).
+   - Speech-to-text: OFF by default (privacy); opt-in toggle under "Lyd". `SpeechRecognition`, language selectable (`nb-NO` / `no-NO` / `nn-NO`). Works in Google Chrome/Edge on a local file; blocked inside the artifact frame — degrade to typing with a clear message.
+   - Text-to-speech: `speechSynthesis` with an on-device (`localService`) Norwegian voice only. If none is installed, stay silent and say so once (never read Norwegian with an English voice).
 7. **Points reward thinking, not speed.** See the TP table in `DESIGN.md`. Wrong answers never cost points.
 8. **Ask before** installing anything, adding API keys, or using accounts.
 9. **Theme + phone.** Colors are CSS tokens with light/dark variants; layout must work at ~390px with no horizontal scroll. Respect `prefers-reduced-motion`.
