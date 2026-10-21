@@ -2,7 +2,9 @@
 
 *Living document. Last updated 21 Oct 2026, 11:25, after version 2.*
 Open decisions: see the **Tenkemakker decision board**: https://claude.ai/artifact/VQuDcDWzBJ1KyeXvmGVTLi (shared Claude artifact; the team updates it live).
-App (published): https://claude.ai/artifact/5ojWwQoxmE9ALVXC98YUMy This document records what we've built and why; the board holds what we haven't decided.
+App (published): https://claude.ai/artifact/5ojWwQoxmE9ALVXC98YUMy
+
+This document records what we've built and why; the board holds what we haven't decided.
 
 ## 1. The problem
 
@@ -66,8 +68,8 @@ Single file `index.html`. Three tasks (fractions, percent, equations), each with
 
 - Published as a Claude artifact: Makker uses real Claude (`sample`, quick tier) for hint replies and judging Ida's explanation (returns `reply`, `understood`, `summary`).
 - As a local file: scripted replies via keyword matching ("Øvingsmodus").
-- Languages: Norwegian bokmål (default) and English, NO/EN toggle in the header.
-- Voice in: browser `SpeechRecognition` (Google Chrome/Edge, local file only; audio goes to Google's speech service). Voice out: `speechSynthesis`, with a voice matching the chosen language.
+- Languages: Norwegian bokmål (default) and English, NO/EN toggle in the header (remembered between visits). The Cloudflare Worker takes a `lang` parameter so Makker answers in the chosen language there too.
+- Voice in: **off by default** (privacy, decided 11:57). Opt-in under "Lyd" with a plain warning; press-and-hold the mic to talk, release to send; uses browser `SpeechRecognition`, where audio goes to Google's speech service. Voice out: `speechSynthesis`, on-device (`localService`) voices matching the chosen language only, so no text leaves the device.
 
 ## 5. Known gaps
 
@@ -79,6 +81,29 @@ Single file `index.html`. Three tasks (fractions, percent, equations), each with
 ## 6. Out of scope today
 
 Real accounts, real pupil data, school integrations (Feide, LMS), content beyond the three demo tasks, a backend.
+
+## 6b. Hosting on Cloudflare (live for the demo)
+
+Decided 11:42, deployed 12:00: **https://tenkemakker.ethlo.com**, login by email one-time code.
+Worker source: `worker/worker.js`. The Worker fetches `index.html` from this repo's `main`, so **`git push` updates the site** (within ~20 s).
+Access app "Tenkemakker demo": allow-list = ccode@ethlo.com (add team emails in Zero Trust → Access → Applications).
+The `ANTHROPIC_API_KEY` secret is added by hand in the dashboard; until then the hosted app runs in Øvingsmodus.
+
+```
+Browser ──▶ Cloudflare Access (email login, one-time code)
+              ├──▶ Static page: index.html (Pages / Workers static assets)
+              └──▶ /api/makker  (Worker) ──▶ Anthropic API
+                                   ▲
+                       ANTHROPIC_API_KEY as a Worker secret
+```
+
+- **No secrets in the HTML.** The page calls `/api/makker`; only the Worker holds the API key (Cloudflare secret, never in Git).
+- **Login:** Cloudflare Access with email one-time PIN in front of both the page and the API. Allow-list the team's emails first. No login code in the app.
+- **Fixed prompts server-side.** The page sends task id, mode (hint / teach) and conversation; the Worker builds the Makker prompt. Nobody can use the endpoint as a general-purpose Claude.
+- **Limits:** spend cap on the API key in the Anthropic Console, rate limit per user, short `max_tokens`, no logging of what children write or say.
+- **Voice works** here (a normal web page, not an artifact frame), so voice input and real Claude finally work together.
+- **The page keeps a fallback:** artifact `sample` → `/api/makker` → scripted replies, in that order.
+- **Before real children use it:** children's emails are personal data. That needs parental consent and a data processing agreement with Anthropic (and Google, for browser speech). For schools, Feide login instead of email.
 
 ## 7. Demo outline (5 min)
 
@@ -92,4 +117,8 @@ Real accounts, real pupil data, school integrations (Feide, LMS), content beyond
 - **v1** (10:50): hint ladder, teach-back, parent week card, voice in/out, real/scripted Makker.
 - **v1.1**: answer hints in the chat; speech language picker; no English voice for Norwegian.
 - **v2** (11:20): joyful game design, TP, levels, streak, badges, class board with competition/cooperation toggle.
-- **v2.1**: English alongside Norwegian bokmål. NO/EN toggle in the header (remembered between visits); tasks, hints, Makker (scripted and real Claude), badges, class board and parent card are all translated. Speech in/out follows the chosen language.
+- **v2.1** (12:00): Cloudflare hosting with email login; server-side Makker.
+- **v2.2** (12:05): less effort + mobile: quick-reply chips (Vet ikke / Neste hint / Jeg prøver selv), sentence starters for teaching, one big mic, sound settings tucked away, chat-style reply bar, bottom menu on phones (Oppgave / Klassen / Forelder), viewport fix.
+- **v2.3** (12:00): voice input off by default (opt-in with warning), read-aloud on-device only; badge "Snakket ut" replaced by "Krystallklar" (Makker understood on first explanation).
+- **v2.4** (12:05): press-and-hold to talk (hold the mic, release to send; works with mouse, touch and keyboard). Voice still opt-in.
+- **v2.5** (12:25): English alongside Norwegian bokmål (by Celina, PR #1, ported onto v2.4): NO/EN toggle; tasks, hints, Makker (scripted, artifact Claude and Cloudflare Worker), badges, class board, parent card, quick replies and voice texts translated.

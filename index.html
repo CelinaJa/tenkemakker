@@ -1,3 +1,5 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Tenkemakker</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -193,6 +195,69 @@ h2.sec{font-family:var(--f-game);font-weight:400;font-size:1.4rem;margin:0;lette
 @keyframes toast{0%{opacity:0;transform:translate(-50%,20px)}10%,85%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,20px)}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
+/* Rask svar-linje */
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.chips:empty{display:none}
+.chips button{flex:none;border:2px solid var(--violet);background:var(--card);color:var(--violet);font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:999px;cursor:pointer}
+.chips button:active{background:var(--violet-soft)}
+.composer{display:flex;align-items:flex-end;gap:8px;background:var(--bg);border:2px solid var(--line);border-radius:28px;padding:6px}
+.composer:focus-within{border-color:var(--violet)}
+.composer textarea{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font-size:1rem;line-height:1.4;padding:10px 4px;resize:none;max-height:140px;min-height:0;outline:none}
+.composer .mic,.composer .send{flex:none;width:48px;height:48px;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer}
+.composer .mic{background:var(--coral);color:#fff;box-shadow:0 3px 0 #c94444;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.composer .mic.on{transform:scale(1.15);background:#e04848}
+.composer .mic.on{animation:micpulse 1.1s infinite}
+@keyframes micpulse{0%{box-shadow:0 0 0 0 var(--coral)}100%{box-shadow:0 0 0 14px transparent}}
+.composer .send{background:var(--mint);color:#06352a}
+.composer .send:disabled{opacity:.4}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.settings{margin-left:auto;position:relative;flex:none}
+.settings summary{list-style:none;cursor:pointer;font-size:.8rem;font-weight:700;color:var(--muted);border:2px solid var(--line);border-radius:999px;padding:4px 12px}
+.settings summary::-webkit-details-marker{display:none}
+.settings-pop{position:absolute;right:0;top:calc(100% + 6px);z-index:20;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.15);min-width:210px}
+.settings-pop select{padding:6px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);font-size:.85rem}
+.bottomnav{display:none}
+
+/* Mobil */
+@media (max-width:700px){
+  body{padding-block:10px calc(92px + env(safe-area-inset-bottom,0px))}
+  .wrap{gap:12px}
+  #toptabs{display:none}
+  .logo h1{font-size:1.6rem}
+  .logo p{font-size:.75rem}
+  .hud{grid-template-columns:auto minmax(0,1fr) auto auto;gap:8px;padding:8px 10px;border-radius:18px}
+  .avatar{width:40px;height:40px;font-size:1.2rem;border-radius:12px}
+  .xp-top span{display:none}
+  .xp-top b{font-size:.9rem}
+  .chip{padding:6px 9px;font-size:1.05rem;gap:6px;border-radius:12px}
+  .chip small{display:none}
+  .coin{width:20px;height:20px;font-size:.55rem;border-width:2px}
+  .flame{width:15px;height:20px}.flame::after{left:4px;width:7px;height:9px}
+  .panel{padding:16px;border-radius:20px;gap:12px}
+  .task{font-size:1.45rem}
+  .answer input{font-size:1.15rem;padding:10px 12px}
+  .rung{padding:8px 10px;grid-template-columns:30px minmax(0,1fr) auto}
+  .rung b{width:28px;height:28px}
+  .makker{width:54px;height:54px;transform-origin:left top}
+  .makker-head{gap:10px}
+  .makker-head h2{font-size:1.25rem}
+  .makker-head p{font-size:.78rem}
+  .makker .body{inset:8px 1px 0}.makker .ant{left:24px;height:11px}
+  .makker .eye{top:21px;width:12px;height:14px}.makker .eye.l{left:12px}.makker .eye.r{right:12px}
+  .makker .eye::after{left:3px;top:4px;width:6px;height:6px}
+  .makker .mouth{top:38px}
+  .chat{max-height:none;overflow:visible}
+  .teach{position:sticky;bottom:calc(70px + env(safe-area-inset-bottom,0px));z-index:6;background:var(--card);padding-top:8px;margin:0 -6px;padding-inline:6px;border-radius:20px}
+  body[data-view="elev"] #lower{display:none}
+  body[data-view="klasse"] #view-elev > .grid{display:none}
+  .bottomnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--card);border-top:2px solid var(--line);
+    padding:6px max(10px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px));justify-content:space-around}
+  .bottomnav button{flex:1;border:0;background:transparent;color:var(--muted);font-weight:700;font-size:.75rem;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;border-radius:14px;cursor:pointer}
+  .bottomnav button[aria-current="page"]{color:var(--violet);background:var(--violet-soft)}
+  .toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+  .big3 b{font-size:1.6rem}
+}
+
 /* Forelder */
 .big3{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 @media (max-width:640px){.big3{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -234,7 +299,7 @@ h2.sec{font-family:var(--f-game);font-weight:400;font-size:1.4rem;margin:0;lette
       </div>
     </div>
     <div class="head-right">
-      <div class="tabs" role="tablist">
+      <div class="tabs" id="toptabs" role="tablist">
         <button id="tab-elev" role="tab" aria-selected="true">Ida</button>
         <button id="tab-forelder" role="tab" aria-selected="false" data-i18n="tabParent">Forelder</button>
       </div>
@@ -281,15 +346,25 @@ h2.sec{font-family:var(--f-game);font-weight:400;font-size:1.4rem;margin:0;lette
             <h2>Makker</h2>
             <p><span data-i18n="makkerTag">Din læringsmakker. Elsker spørsmål, hater fasit.</span> <span class="mode-pill" id="mode-pill">Øvingsmodus</span></p>
           </div>
-          <label class="toggle"><input type="checkbox" id="speak-toggle" checked> <span data-i18n="readAloud">Les høyt</span></label>
+          <details class="settings">
+            <summary data-i18n="sound">Lyd</summary>
+            <div class="settings-pop">
+              <label class="toggle"><input type="checkbox" id="speak-toggle" checked> <span data-i18n="readAloud">Makker leser høyt</span></label>
+              <label class="toggle"><input type="checkbox" id="voice-toggle"> <span data-i18n="holdToTalk">Hold inne for å snakke</span></label>
+              <p class="note" style="white-space:normal;max-width:230px" data-i18n="voiceWarn">Tale er av som standard. Slår du den på, sendes lyden til Google for å bli gjort om til tekst. Makkers opplesning skjer bare på enheten.</p>
+              <label class="toggle"><span data-i18n="speechLbl">Tale</span>
+                <select id="sr-lang" data-i18n-aria="srAria" aria-label="Talespråk"></select>
+              </label>
+            </div>
+          </details>
         </div>
         <div class="chat" id="chat" aria-live="polite"></div>
         <div class="teach" id="teach" hidden>
-          <textarea id="explain" placeholder="Forklar for Makker med egne ord …" data-i18n-aria="replyAria" aria-label="Ditt svar til Makker"></textarea>
-          <div class="row">
-            <button class="btn ghost mic" id="mic" type="button"><span class="dot"></span><span id="mic-label">Snakk</span></button>
-            <select id="sr-lang" data-i18n-aria="srAria" aria-label="Talespråk"></select>
-            <button class="btn mintb" id="send" type="button" data-i18n="send">Send til Makker</button>
+          <div class="chips" id="chips"></div>
+          <div class="composer">
+            <button class="mic" id="mic" type="button" hidden data-i18n-aria="micAria" aria-label="Hold for å snakke til Makker"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4M8.5 21h7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg><span id="mic-label" class="sr">Hold for å snakke</span></button>
+            <textarea id="explain" rows="1" placeholder="Skriv svaret ditt …" data-i18n-aria="replyAria" aria-label="Ditt svar til Makker"></textarea>
+            <button class="send" id="send" type="button" data-i18n-aria="send" aria-label="Send til Makker"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           </div>
           <p class="note" id="mic-note" hidden></p>
         </div>
@@ -297,7 +372,7 @@ h2.sec{font-family:var(--f-game);font-weight:400;font-size:1.4rem;margin:0;lette
       </div>
     </section>
 
-    <section class="lower">
+    <section class="lower" id="lower">
       <div class="panel">
         <div class="sec-head">
           <h2 class="sec" data-i18n="classTitle">Klasse 8B denne uka</h2>
@@ -360,6 +435,11 @@ h2.sec{font-family:var(--f-game);font-weight:400;font-size:1.4rem;margin:0;lette
     </div>
   </section>
 </div>
+<nav class="bottomnav" data-i18n-aria="navAria" aria-label="Visninger">
+  <button type="button" data-v="elev" aria-current="page"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4h14v16H5zM9 9h6M9 13h6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg><span data-i18n="navTask">Oppgave</span></button>
+  <button type="button" data-v="klasse"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 20v-6M12 20V6M19 20v-9" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg><span data-i18n="navClass">Klassen</span></button>
+  <button type="button" data-v="forelder"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="9" cy="8" r="3" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="17" cy="10" r="2" stroke="currentColor" stroke-width="2" fill="none"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5M15 20c0-2 1-4 3-4s3 2 3 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg><span data-i18n="navParent">Forelder</span></button>
+</nav>
 
 <script>
 (function(){
@@ -367,6 +447,14 @@ h2.sec{font-family:var(--f-game);font-weight:400;font-size:1.4rem;margin:0;lette
 // ---------- Språk: norsk bokmål (standard) og engelsk ----------
 const STR = {
   nb:{
+    sound:"Lyd", holdToTalk:"Hold inne for å snakke", speechLbl:"Tale",
+    voiceWarn:"Tale er av som standard. Slår du den på, sendes lyden til Google for å bli gjort om til tekst. Makkers opplesning skjer bare på enheten.",
+    micAria:"Hold for å snakke til Makker", release:"Slipp for å sende",
+    hintPhVoice:"Snakk eller skriv svaret ditt …", teachPhVoice:"Forklar med egne ord, eller hold inne mikrofonen …",
+    holdTip:"Hold knappen inne mens du snakker.", noSpeech:"Hørte ingenting. Hold inne og snakk litt høyere.",
+    chipDunno:"Vet ikke", chipNext:"Neste hint", chipSelf:"Jeg prøver selv",
+    starters:[["Fordi …","Fordi "],["Tenk på det som …","Tenk på det som "],["Først må du …","Først må du "]],
+    navTask:"Oppgave", navClass:"Klassen", navParent:"Forelder", navAria:"Visninger",
     tagline:"Tankepoeng for å tenke selv. Oppdiktet klasse 8B.",
     tabParent:"Forelder", hudAria:"Din status",
     tpTitle:"Tankepoeng denne uka", tpWord:"tankepoeng",
@@ -375,8 +463,8 @@ const STR = {
     ladder:"Hintstigen",
     rule:"Feil svar koster ingenting. Færre hint gir flere poeng, og mest får du for å lære bort.",
     makkerTag:"Din læringsmakker. Elsker spørsmål, hater fasit.",
-    readAloud:"Les høyt", replyAria:"Ditt svar til Makker",
-    talk:"Snakk", stop:"Stopp", srAria:"Talespråk", send:"Send til Makker",
+    readAloud:"Makker leser høyt", replyAria:"Ditt svar til Makker",
+    talk:"Hold for å snakke", stop:"Slipp for å sende", srAria:"Talespråk", send:"Send til Makker",
     nextTask:"Neste oppgave", seeParent:"Se forelderkortet",
     classTitle:"Klasse 8B denne uka", viewAria:"Visning", vs:"Mot hverandre", tog:"Sammen",
     resetNote:"Lista nullstilles hver mandag. Poeng gis for tenking, ikke for fart.",
@@ -407,7 +495,7 @@ const STR = {
     locked:"Låst til du trenger det", stuck:"Jeg står fast", noMoreHints:"Ingen flere hint",
     hintLeads:["Bra at du sier ifra! ","OK, et tips: ","Se på dette eksempelet: "],
     hintTail1:" Svar meg her nede.", hintTail:" Hva tenker du nå?",
-    hintPh:"Svar Makker, snakk eller skriv …", teachPh:"Forklar for Makker med egne ord …",
+    hintPh:"Skriv svaret ditt …", teachPh:"Forklar med egne ord …",
     right0:"Riktig, helt uten hint!", rightN:n=>`Riktig! Du brukte ${n} av 3 hint.`,
     popSelf:"Tenkte selv", popSolved:"Løst", streakToast:n=>`${n} dager på rad!`,
     wrongAns:"Ikke helt. Feil koster ingenting. Prøv igjen eller ta et hint.",
@@ -420,8 +508,8 @@ const STR = {
     confused:"Hmm, jeg henger ikke helt med. Kan du forklare det med et eksempel?",
     aiLang:"norsk bokmål",
     noSR:"Tale virker i Google Chrome eller Edge. Skriv i feltet i stedet.",
-    listening:"Jeg lytter … snakk i vei.",
-    micBlocked:"Mikrofonen er ikke tillatt her. Åpne filen i Google Chrome for å snakke, eller skriv i feltet.",
+    listening:"Jeg lytter … slipp knappen når du er ferdig.",
+    micBlocked:"Mikrofonen er ikke tillatt her. Åpne siden i Google Chrome for å snakke, eller skriv i feltet.",
     srFail:"Fikk ikke tak i talen. Prøv igjen, eller skriv i feltet.",
     micFail:"Kunne ikke starte mikrofonen. Skriv i feltet i stedet.",
     srLangs:[["nb-NO","Norsk (nb-NO)"],["no-NO","Norsk (no-NO)"],["nn-NO","Nynorsk (nn-NO)"]],
@@ -430,6 +518,14 @@ const STR = {
     defaultStarter:"Ida forklarte gjennomsnitt til Makker på onsdag. Spør henne hva som er gjennomsnittlig leggetid i familien deres."
   },
   en:{
+    sound:"Sound", holdToTalk:"Hold to talk", speechLbl:"Speech",
+    voiceWarn:"Voice is off by default. If you turn it on, the audio is sent to Google to be turned into text. Makker's read-aloud happens only on the device.",
+    micAria:"Hold to talk to Makker", release:"Release to send",
+    hintPhVoice:"Talk or type your answer …", teachPhVoice:"Explain in your own words, or hold the mic …",
+    holdTip:"Hold the button down while you talk.", noSpeech:"Didn't hear anything. Hold and speak a little louder.",
+    chipDunno:"Don't know", chipNext:"Next hint", chipSelf:"I'll try myself",
+    starters:[["Because …","Because "],["Think of it as …","Think of it as "],["First you need to …","First you need to "]],
+    navTask:"Task", navClass:"Class", navParent:"Parent", navAria:"Views",
     tagline:"Thinking points for thinking for yourself. Fictional class 8B.",
     tabParent:"Parent", hudAria:"Your status",
     tpTitle:"Thinking points this week", tpWord:"thinking points",
@@ -438,8 +534,8 @@ const STR = {
     ladder:"Hint ladder",
     rule:"Wrong answers cost nothing. Fewer hints give more points, and you get the most for teaching.",
     makkerTag:"Your learning buddy. Loves questions, hates answer keys.",
-    readAloud:"Read aloud", replyAria:"Your reply to Makker",
-    talk:"Talk", stop:"Stop", srAria:"Speech language", send:"Send to Makker",
+    readAloud:"Makker reads aloud", replyAria:"Your reply to Makker",
+    talk:"Hold to talk", stop:"Release to send", srAria:"Speech language", send:"Send to Makker",
     nextTask:"Next task", seeParent:"See the parent card",
     classTitle:"Class 8B this week", viewAria:"View", vs:"Head to head", tog:"Together",
     resetNote:"The list resets every Monday. Points are for thinking, not speed.",
@@ -470,7 +566,7 @@ const STR = {
     locked:"Locked until you need it", stuck:"I'm stuck", noMoreHints:"No more hints",
     hintLeads:["Good call asking! ","OK, here's a tip: ","Look at this example: "],
     hintTail1:" Answer me down here.", hintTail:" What are you thinking now?",
-    hintPh:"Answer Makker, talk or type …", teachPh:"Explain it to Makker in your own words …",
+    hintPh:"Type your answer …", teachPh:"Explain in your own words …",
     right0:"Correct, with no hints at all!", rightN:n=>`Correct! You used ${n} of 3 hints.`,
     popSelf:"Thought for yourself", popSolved:"Solved", streakToast:n=>`${n} days in a row!`,
     wrongAns:"Not quite. Mistakes cost nothing. Try again or take a hint.",
@@ -483,8 +579,8 @@ const STR = {
     confused:"Hmm, I'm not quite following. Can you explain it with an example?",
     aiLang:"engelsk (English)",
     noSR:"Speech works in Google Chrome or Edge. Type in the box instead.",
-    listening:"I'm listening … go ahead.",
-    micBlocked:"The microphone isn't allowed here. Open the file in Google Chrome to talk, or type in the box.",
+    listening:"I'm listening … release the button when you're done.",
+    micBlocked:"The microphone isn't allowed here. Open the page in Google Chrome to talk, or type in the box.",
     srFail:"Couldn't catch that. Try again, or type in the box.",
     micFail:"Couldn't start the microphone. Type in the box instead.",
     srLangs:[["en-GB","English (en-GB)"],["en-US","English (en-US)"]],
@@ -596,7 +692,7 @@ const BADGES = [
   {id:"self", ico:"!", c:"--violet", nb:["Tenkte selv","Løs en oppgave uten hint"], en:["Thought for myself","Solve a task with no hints"]},
   {id:"teach", ico:"L", c:"--mint", nb:["Læreren","Lær Makker noe nytt"], en:["The Teacher","Teach Makker something new"]},
   {id:"grit", ico:"3", c:"--coral", nb:["Står på","Bruk alle tre hint og løs likevel"], en:["Keeps going","Use all three hints and still solve it"]},
-  {id:"voice", ico:"~", c:"--sun-dk", nb:["Snakket ut","Forklar med stemmen"], en:["Spoke up","Explain with your voice"]},
+  {id:"first", ico:"1", c:"--sun-dk", nb:["Krystallklar","Makker skjønte det på første forklaring"], en:["Crystal clear","Makker got it on your first explanation"]},
   {id:"loud", ico:"?", c:"--violet-dk", nb:["Tenker høyt","Svar Makker på et hint"], en:["Thinking aloud","Answer Makker on a hint"]},
   {id:"all", ico:"3", c:"--mint-dk", nb:["Tre på rad","Fullfør alle dagens oppgaver"], en:["Three in a row","Finish all of today's tasks"]}
 ];
@@ -611,12 +707,19 @@ const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // ---------- Faner ----------
 function showTab(which){
-  $("tab-elev").setAttribute("aria-selected", which==="elev");
+  document.body.dataset.view = which;
+  $("tab-elev").setAttribute("aria-selected", which!=="forelder");
   $("tab-forelder").setAttribute("aria-selected", which==="forelder");
-  $("view-elev").hidden = which!=="elev";
+  $("view-elev").hidden = which==="forelder";
   $("view-forelder").hidden = which!=="forelder";
+  document.querySelectorAll(".bottomnav button").forEach(b=>{ if(b.dataset.v===which) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
   if(which==="forelder") renderParent();
+  if(which==="klasse" && !isMobile()) $("lower").scrollIntoView({behavior:"smooth"});
+  else window.scrollTo({top:0});
 }
+const isMobile = () => matchMedia("(max-width:700px)").matches;
+document.querySelectorAll(".bottomnav button").forEach(b=> b.onclick = () => showTab(b.dataset.v));
+document.body.dataset.view = "elev";
 $("tab-elev").onclick = () => showTab("elev");
 $("tab-forelder").onclick = () => showTab("forelder");
 
@@ -719,8 +822,10 @@ const voices = {nb:null, en:null};
 function pickVoice(){
   try{
     const vs = speechSynthesis.getVoices();
-    voices.nb = vs.find(v=>/^(nb|no|nn)\b/i.test(v.lang)) || vs.find(v=>/norsk|norw|bokm/i.test(v.name)) || null;
-    voices.en = vs.find(v=>/^en[-_]GB/i.test(v.lang)) || vs.find(v=>/^en\b/i.test(v.lang)) || null;
+    // Bare stemmer som kjører på enheten (localService), så ingen tekst sendes ut
+    const local = vs.filter(v=>v.localService);
+    voices.nb = local.find(v=>/^(nb|no|nn)\b/i.test(v.lang)) || local.find(v=>/norsk|norw|bokm/i.test(v.name)) || null;
+    voices.en = local.find(v=>/^en[-_]GB/i.test(v.lang)) || local.find(v=>/^en\b/i.test(v.lang)) || null;
   }catch(e){}
 }
 try{ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }catch(e){}
@@ -751,7 +856,25 @@ function makker(text, mood, lang){
 }
 function me(text){ $("chat").append(el("div","msg e",text)); scrollChat(); }
 function sys(text){ $("chat").append(el("div","msg sys",text)); scrollChat(); }
-function scrollChat(){ const c=$("chat"); c.scrollTop = c.scrollHeight; }
+function scrollChat(){
+  const c=$("chat"); c.scrollTop = c.scrollHeight;
+  if(isMobile() && c.lastElementChild){ c.lastElementChild.scrollIntoView({block:"center", behavior: reduce?"auto":"smooth"}); }
+}
+function setChips(list){
+  const C=$("chips"); C.innerHTML="";
+  list.forEach(([label,fn])=>{ const b=el("button",null,label); b.type="button"; b.onclick=fn; C.append(b); });
+}
+function quickSend(text){ $("explain").value = text; sendExplain(); }
+function starter(text){ const e=$("explain"); e.value = text; e.focus(); e.setSelectionRange(text.length,text.length); grow(); }
+function grow(){ const e=$("explain"); e.style.height="auto"; e.style.height=Math.min(140,e.scrollHeight)+"px"; }
+$("explain").addEventListener("input", grow);
+function teachChips(){ setChips(tr("starters").map(([label,text])=>[label, ()=>starter(text)])); }
+function hintChips(){
+  const list = [[tr("chipDunno"), ()=>quickSend(tr("chipDunno"))]];
+  if(S.hint<3) list.push([tr("chipNext"), ()=>$("stuck").click()]);
+  list.push([tr("chipSelf"), ()=>{ $("answer").focus(); $("answer").scrollIntoView({block:"center", behavior:"smooth"}); }]);
+  setChips(list);
+}
 
 // ---------- Oppgave ----------
 function renderTaskText(){
@@ -778,7 +901,7 @@ function renderFeedback(){
   f.textContent = S.fb ? tr(S.fb.key, S.fb.arg) : "";
   f.className = "feedback" + (S.fb && S.fb.cls ? " " + S.fb.cls : "");
 }
-function renderPlaceholder(){ $("explain").placeholder = tr(S.mode==="hint" ? "hintPh" : "teachPh"); }
+function renderPlaceholder(){ const v = voiceOn(); $("explain").placeholder = tr(S.mode==="teach" ? (v?"teachPhVoice":"teachPh") : (v?"hintPhVoice":"hintPh")); }
 function renderNext(){ $("next").textContent = tr(S.i < TASKS.length-1 ? "nextTask" : "seeParent"); }
 function renderLadder(){
   const t = task(), L=$("ladder"); L.innerHTML="";
@@ -804,7 +927,8 @@ $("stuck").onclick = () => {
   S.mode = "hint"; S.tries = 0;
   S.history = [{role:"assistant", content: lead + h}];
   renderPlaceholder();
-  $("teach").hidden = false; $("explain").value = ""; $("explain").focus();
+  $("teach").hidden = false; $("explain").value = ""; grow(); hintChips();
+  if(!isMobile()) $("explain").focus();
 };
 
 function norm(s){ return s.toLowerCase().replace(/\s+/g,"").replace(",","."); }
@@ -837,6 +961,7 @@ function startTeaching(){
   S.teaching = true; S.tries = 0; S.mode = "teach";
   S.history = [{role:"assistant", content:t.wrong}];
   renderPlaceholder();
+  teachChips();
   sys(tr("swap", TEACH_TP));
   makker(t.wrong, "confused");
   $("teach").hidden = false; $("explain").value="";
@@ -845,16 +970,15 @@ function startTeaching(){
 async function sendExplain(){
   const txt = $("explain").value.trim();
   if(!txt) return;
-  if(usedVoice){ unlock("voice"); usedVoice = false; }
   if(S.mode==="hint" && !S.solved){ return hintReply(txt); }
   if(!S.teaching) return;
   stopMic();
-  me(txt); $("explain").value=""; $("send").disabled = true;
+  me(txt); $("explain").value=""; grow(); $("send").disabled = true;
   S.tries++;
   S.history.push({role:"user", content:txt});
   const t = task(), lang = LANG;
   let res = null;
-  if(sampleFn){
+  if(sampleFn || backend){
     const thinking = el("div","msg m thinking",tr("thinking")); $("chat").append(thinking); scrollChat();
     try{ res = await askClaude(t); }catch(e){ res = null; if(e && (e.code==="not_granted"||e.code==="sampling_disabled")) setLive(false); }
     thinking.remove();
@@ -869,6 +993,7 @@ async function sendExplain(){
     confetti();
     award(TEACH_TP, tr("teachBonus"), $("send"));
     unlock("teach");
+    if(S.tries===1) unlock("first");
     $("next").hidden = false;
     renderNext();
     if(S.i === TASKS.length-1){ unlock("all"); setTimeout(()=>toast(tr("allDone")), 1800); }
@@ -881,12 +1006,16 @@ $("explain").addEventListener("keydown", e => { if(e.key==="Enter" && !e.shiftKe
 // Ida svarer på et hint: Makker veileder med spørsmål, aldri fasit
 async function hintReply(txt){
   stopMic();
-  me(txt); $("explain").value=""; $("send").disabled = true;
+  me(txt); $("explain").value=""; grow(); $("send").disabled = true;
   S.tries++;
   S.history.push({role:"user", content:txt});
   const t = task(), lang = LANG;
   let reply = null;
-  if(sampleFn){
+  if(backend && !sampleFn){
+    const thinking = el("div","msg m thinking",tr("thinking")); $("chat").append(thinking); scrollChat();
+    try{ const r = await callBackend({mode:"hint", task:S.i, hint:S.hint, history:S.history, lang}); reply = r && r.reply ? String(r.reply) : null; }catch(e){}
+    thinking.remove();
+  } else if(sampleFn){
     const thinking = el("div","msg m thinking",tr("thinking")); $("chat").append(thinking); scrollChat();
     try{
       const convo = S.history.map(h => (h.role==="user"?"Ida: ":"Makker: ") + h.content).join("\n");
@@ -910,6 +1039,7 @@ Svar Ida på ${tr("aiLang")}, maks 2 korte setninger, i en tone som passer en 13
   }
   S.history.push({role:"assistant", content:reply});
   makker(reply, hit ? "happy" : "", lang);
+  hintChips();
   if(S.thinkPaid < 2 && txt.length > 3){ S.thinkPaid++; award(THINK_TP, tr("thinkAloud"), $("send")); unlock("loud"); }
   $("send").disabled = false;
 }
@@ -929,19 +1059,35 @@ $("next").onclick = () => {
 };
 
 // ---------- Ekte Claude når siden kjører som artefakt ----------
-let sampleFn = null;
+let sampleFn = null, backend = false;
 function renderMode(){
-  const p=$("mode-pill"); p.textContent = tr(sampleFn ? "live" : "practice"); p.className = "mode-pill" + (sampleFn?" live":"");
+  const on = !!(sampleFn || backend);
+  const p=$("mode-pill"); p.textContent = tr(on ? "live" : "practice"); p.className = "mode-pill" + (on?" live":"");
 }
 function setLive(on){
-  if(!on) sampleFn = null;
+  if(!on){ sampleFn = null; backend = false; }
   renderMode();
 }
 (async()=>{
   try{ if(window.claude && claude.use){ const s = await claude.use("sample"); if(s){ sampleFn = s; setLive(true); } } }catch(e){}
 })();
+// Egen server (Cloudflare): /api/makker holder API-nøkkelen, siden har ingen hemmeligheter
+async function callBackend(body){
+  const r = await fetch("/api/makker", {method:"POST", headers:{"content-type":"application/json"}, credentials:"same-origin", body:JSON.stringify(body)});
+  if(!r.ok) throw new Error("backend " + r.status);
+  return r.json();
+}
+(async()=>{
+  if(!/^https?:$/.test(location.protocol) || window.claude) return;
+  try{ const r = await fetch("/api/health", {credentials:"same-origin"}); if(r.ok){ const j = await r.json(); if(j && j.ai){ backend = true; setLive(true); } } }catch(e){}
+})();
 
 async function askClaude(t){
+  if(!sampleFn && backend){
+    const r = await callBackend({mode:"teach", task:S.i, history:S.history, lang:LANG});
+    if(!r || typeof r.reply!=="string") return null;
+    return {reply:r.reply, understood:!!r.understood, summary:String(r.summary||"")};
+  }
   const convo = S.history.map(h => (h.role==="user"?"Ida: ":"Makker: ") + h.content).join("\n");
   const prompt =
 `Du spiller «Makker», en vennlig og litt morsom KI-læringsmakker for Ida (13 år, 8. trinn). Nå er rollene byttet: Ida er læreren og forklarer for Makker, som har misforstått.
@@ -965,33 +1111,64 @@ Svar KUN med JSON: {"reply":"...","understood":true|false,"summary":"..."}`;
 
 // ---------- Tale inn (Google Chrome / Edge når filen åpnes lokalt) ----------
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-let rec = null, listening = false, baseText = "", usedVoice = false;
+// Tale inn er AV som standard (personvern): lyd sendes til Google når den brukes
+function voiceOn(){ return $("voice-toggle").checked; }
+$("voice-toggle").onchange = () => {
+  $("mic").hidden = !voiceOn();
+  if(!voiceOn()) stopMic();
+  renderPlaceholder();
+};
+let rec = null, listening = false, baseText = "";
 function micNote(t){ $("mic-note").hidden = !t; $("mic-note").textContent = t||""; }
 function stopMic(){ if(rec && listening){ try{ rec.stop(); }catch(e){} } }
 function renderSrLangs(){
   const sel = $("sr-lang"); sel.innerHTML = "";
   tr("srLangs").forEach(([v,label])=>{ const o = el("option",null,label); o.value = v; sel.append(o); });
 }
-$("mic").onclick = () => {
+// Trykk og hold for å snakke: start ved trykk, slipp for å sende
+let holding = false, pressAt = 0;
+function startRec(){
+  if(!voiceOn() || listening) return;
   if(!SR){ micNote(tr("noSR")); return; }
-  if(listening){ stopMic(); return; }
   try{ speechSynthesis.cancel(); }catch(e){}
   rec = new SR(); rec.lang = $("sr-lang").value; rec.interimResults = true; rec.continuous = true;
   baseText = $("explain").value ? $("explain").value.trim()+" " : "";
   rec.onresult = ev => {
     let fin="", tmp="";
     for(let k=0;k<ev.results.length;k++){ const r=ev.results[k]; (r.isFinal? (fin+=r[0].transcript) : (tmp+=r[0].transcript)); }
-    $("explain").value = baseText + fin + tmp; usedVoice = true;
+    $("explain").value = baseText + fin + tmp; grow();
   };
-  rec.onstart = () => { listening=true; $("mic").classList.add("on"); $("mic-label").textContent=tr("stop"); micNote(tr("listening")); };
-  rec.onend = () => { listening=false; $("mic").classList.remove("on"); $("mic-label").textContent=tr("talk"); if(!$("mic-note").dataset.err) micNote(""); };
+  rec.onstart = () => {
+    listening=true; $("mic").classList.add("on"); $("mic-label").textContent=tr("stop");
+    micNote(tr("listening"));
+    if(!holding) stopMic();   // sluppet før mikrofonen rakk å starte
+  };
+  rec.onend = () => {
+    listening=false; $("mic").classList.remove("on"); $("mic-label").textContent=tr("talk");
+    if($("mic-note").dataset.err) return;
+    if($("explain").value.trim()){ micNote(""); setTimeout(()=>{ if($("explain").value.trim()) sendExplain(); }, 250); }
+    else micNote(tr(Date.now()-pressAt < 400 ? "holdTip" : "noSpeech"));
+  };
   rec.onerror = ev => {
     $("mic-note").dataset.err = "1";
-    micNote(tr(ev.error==="not-allowed"||ev.error==="service-not-allowed" ? "micBlocked" : "srFail"));
-    setTimeout(()=>{ delete $("mic-note").dataset.err; }, 50);
+    micNote(tr(ev.error==="not-allowed"||ev.error==="service-not-allowed" ? "micBlocked" : ev.error==="no-speech" ? "noSpeech" : "srFail"));
+    setTimeout(()=>{ delete $("mic-note").dataset.err; }, 300);
   };
   try{ rec.start(); }catch(e){ micNote(tr("micFail")); }
-};
+}
+const micBtn = $("mic");
+micBtn.addEventListener("pointerdown", e => {
+  e.preventDefault(); holding = true; pressAt = Date.now();
+  try{ micBtn.setPointerCapture(e.pointerId); }catch(_){}
+  startRec();
+});
+const release = () => { if(!holding) return; holding = false; stopMic(); };
+micBtn.addEventListener("pointerup", release);
+micBtn.addEventListener("pointercancel", release);
+micBtn.addEventListener("contextmenu", e => e.preventDefault());
+// Tastatur: hold mellomrom eller Enter på knappen
+micBtn.addEventListener("keydown", e => { if((e.key===" "||e.key==="Enter") && !e.repeat){ e.preventDefault(); holding = true; pressAt = Date.now(); startRec(); } });
+micBtn.addEventListener("keyup", e => { if(e.key===" "||e.key==="Enter"){ e.preventDefault(); release(); } });
 
 // ---------- Forelder ----------
 function renderParent(){
@@ -1038,6 +1215,7 @@ function applyLang(regreet){
   renderHUD(); renderBadges(); renderBoard(false);
   renderTaskText(); renderLadder(); renderFeedback(); renderPlaceholder(); renderNext();
   $("mic-label").textContent = tr(listening ? "stop" : "talk"); micNote("");
+  if(!$("teach").hidden){ if(S.mode==="hint" && !S.solved) hintChips(); else if(S.teaching) teachChips(); }
   if(!$("view-forelder").hidden) renderParent();
   // Har Ida ikke begynt på oppgaven ennå, hilser Makker på nytt på det nye språket.
   // Ellers står samtalen som den er, og Makker fortsetter på det nye språket.
