@@ -1,0 +1,572 @@
+<title>Tenkemakker</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Layout: et ruteark fra matteboka. Elevens arbeidsflate til venstre, Makker til høyre; forelderen ser et ukeskort. */
+:root{
+  --paper:#f6f8fb; --grid:#e1e8f1; --card:#ffffff; --ink:#1c2a4a; --muted:#5b6782;
+  --pen:#2c56cc; --pen-soft:#e6ecfb; --makker:#0d7f63; --makker-soft:#e2f4ee;
+  --mark:#fff0a3; --red:#b8402c; --red-soft:#fbe9e5; --line:#d3dbe7;
+  --f-display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#11172a; --grid:#1a2338; --card:#182035; --ink:#e4eaf7; --muted:#9aa6c2;
+  --pen:#86a2ff; --pen-soft:#22305a; --makker:#4fd1a8; --makker-soft:#173a33;
+  --mark:#5a4d12; --red:#ff8f78; --red-soft:#3c1f1b; --line:#2a3550; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#11172a; --grid:#1a2338; --card:#182035; --ink:#e4eaf7; --muted:#9aa6c2;
+  --pen:#86a2ff; --pen-soft:#22305a; --makker:#4fd1a8; --makker-soft:#173a33;
+  --mark:#5a4d12; --red:#ff8f78; --red-soft:#3c1f1b; --line:#2a3550; color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+.toggle{white-space:nowrap}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+h1{font-family:var(--f-display);font-weight:800;font-size:2rem;letter-spacing:-.02em;margin:0;line-height:1}
+h1 span{color:var(--pen)}
+.sub{color:var(--muted);font-size:.9rem;margin:4px 0 0}
+.tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px}
+.tabs button{border:0;background:transparent;color:var(--muted);font:700 .95rem var(--f-body);padding:8px 16px;border-radius:999px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--paper)}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--pen);outline-offset:2px}
+
+.grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:820px){.grid{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.eyebrow{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0}
+.progress{display:flex;gap:6px}
+.progress i{flex:1;height:6px;border-radius:3px;background:var(--line)}
+.progress i.done{background:var(--makker)} .progress i.now{background:var(--pen)}
+.task{font-family:var(--f-display);font-size:1.6rem;font-weight:700;line-height:1.25;margin:0;text-wrap:balance}
+.task .math{background:linear-gradient(transparent 55%,var(--mark) 55%);padding:0 4px;white-space:nowrap}
+.answer{display:flex;gap:8px;flex-wrap:wrap}
+.answer input{flex:1;min-width:0;font:700 1.2rem var(--f-body);padding:10px 14px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink)}
+.btn{font:700 1rem var(--f-body);border-radius:10px;padding:10px 16px;cursor:pointer;border:2px solid var(--ink);background:var(--ink);color:var(--paper)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.green{background:var(--makker);border-color:var(--makker);color:var(--card)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.feedback{margin:0;font-weight:700;min-height:1.5em}
+.feedback.bad{color:var(--red)} .feedback.good{color:var(--makker)}
+
+/* Hintstigen */
+.ladder{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.rung{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:start;padding:10px 12px;border-radius:10px;border:1.5px dashed var(--line);color:var(--muted)}
+.rung b{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--line);color:var(--ink);font-size:.85rem}
+.rung.open{border-style:solid;border-color:var(--pen);background:var(--pen-soft);color:var(--ink)}
+.rung.open b{background:var(--pen);color:var(--card)}
+.rung small{display:block;font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:.7rem;color:var(--muted)}
+.rule{font-size:.85rem;color:var(--muted);margin:0}
+
+/* Makker */
+.makker-head{display:flex;align-items:center;gap:12px}
+.face{width:52px;height:52px;flex:none;border-radius:16px;background:var(--makker-soft);display:grid;place-items:center;position:relative}
+.face::before,.face::after{content:"";position:absolute;top:19px;width:8px;height:8px;border-radius:50%;background:var(--makker);transition:transform .2s}
+.face::before{left:15px}.face::after{right:15px}
+.face span{position:absolute;bottom:13px;left:50%;width:18px;height:6px;margin-left:-9px;border-bottom:3px solid var(--makker);border-radius:0 0 10px 10px}
+.face.confused::before{transform:translateY(-3px)}
+.face.confused span{border-bottom:0;border-top:3px solid var(--makker);border-radius:10px 10px 0 0;bottom:10px;transform:rotate(-8deg)}
+.face.happy span{height:10px;border-bottom-width:4px}
+.face.talking span{animation:talk .25s infinite alternate}
+@keyframes talk{to{height:12px}}
+@media (prefers-reduced-motion:reduce){.face.talking span{animation:none}}
+.makker-head h2{font-family:var(--f-display);font-size:1.3rem;margin:0}
+.makker-head p{margin:0;color:var(--muted);font-size:.85rem}
+.chat{display:flex;flex-direction:column;gap:10px;max-height:420px;overflow-y:auto;padding-right:4px}
+.msg{padding:10px 14px;border-radius:14px;max-width:90%;overflow-wrap:anywhere}
+.msg.m{background:var(--makker-soft);border-top-left-radius:4px;align-self:flex-start}
+.msg.e{background:var(--pen-soft);border-top-right-radius:4px;align-self:flex-end}
+.msg.sys{align-self:center;background:transparent;color:var(--muted);font-size:.85rem;text-align:center}
+.msg.thinking{color:var(--muted);font-style:italic}
+.teach{display:flex;flex-direction:column;gap:8px}
+.teach textarea{width:100%;min-height:72px;resize:vertical;font:1rem var(--f-body);padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink)}
+.teach .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.mic{display:inline-flex;align-items:center;gap:8px}
+.mic .dot{width:12px;height:12px;border-radius:50%;background:var(--red)}
+.mic.on{background:var(--red);border-color:var(--red);color:var(--card)}
+.mic.on .dot{background:var(--card);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.note{font-size:.82rem;color:var(--muted);margin:0}
+.toggle{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--muted);margin-left:auto}
+.mode-pill{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--line);color:var(--muted)}
+.mode-pill.live{background:var(--makker-soft);color:var(--makker)}
+
+/* Forelder */
+.week{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.week{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.day{border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;background:var(--paper)}
+.day.today{border:2px solid var(--pen);background:var(--card)}
+.day h3{margin:0;font-family:var(--f-display);font-size:1rem;display:flex;justify-content:space-between;gap:6px}
+.day h3 em{font-style:normal;font-size:.7rem;color:var(--pen);font-family:var(--f-body);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.stat{display:flex;justify-content:space-between;gap:8px;font-size:.88rem;font-variant-numeric:tabular-nums}
+.stat span{color:var(--muted)}
+.meter{height:8px;border-radius:4px;background:var(--line);overflow:hidden;display:flex}
+.meter i{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.82rem;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.c0{background:var(--makker)} .c1{background:var(--pen)} .c2{background:var(--muted)} .c3{background:var(--red)}
+.big{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.big{grid-template-columns:minmax(0,1fr)}}
+.big div{border-left:3px solid var(--line);padding:2px 0 2px 12px}
+.big b{display:block;font-family:var(--f-display);font-size:1.9rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.big span{font-size:.85rem;color:var(--muted)}
+.said{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.said li{padding:10px 12px;border-radius:10px;background:var(--makker-soft)}
+.said li small{display:block;color:var(--muted);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.starter{background:var(--mark);border-radius:12px;padding:14px 16px;color:var(--ink)}
+.starter p{margin:0}
+.starter .eyebrow{color:var(--ink);opacity:.7}
+h2.sec{font-family:var(--f-display);font-size:1.3rem;margin:0}
+.fine{font-size:.8rem;color:var(--muted);margin:0}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Tenke<span>makker</span></h1>
+      <p class="sub">Hjelp som får deg til å tenke selv. Oppdiktet elev: Ida, 13 år, 8. trinn.</p>
+    </div>
+    <div class="tabs" role="tablist">
+      <button id="tab-elev" role="tab" aria-selected="true">Ida (elev)</button>
+      <button id="tab-forelder" role="tab" aria-selected="false">Forelder</button>
+    </div>
+  </header>
+
+  <!-- ELEV -->
+  <section id="view-elev" class="grid">
+    <div class="panel">
+      <div class="progress" id="progress"></div>
+      <p class="eyebrow" id="task-label"></p>
+      <p class="task" id="task-text"></p>
+      <form class="answer" id="answer-form">
+        <input id="answer" autocomplete="off" placeholder="Ditt svar" aria-label="Ditt svar">
+        <button class="btn" type="submit">Sjekk</button>
+      </form>
+      <p class="feedback" id="feedback" aria-live="polite"></p>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+        <p class="eyebrow">Hintstigen</p>
+        <button class="btn ghost" id="stuck" type="button">Jeg står fast</button>
+      </div>
+      <ol class="ladder" id="ladder"></ol>
+      <p class="rule">Makker gir aldri svaret. Hvert trinn hjelper litt mer, og du bestemmer selv når du trenger neste.</p>
+    </div>
+
+    <div class="panel">
+      <div class="makker-head">
+        <div class="face" id="face"><span></span></div>
+        <div>
+          <h2>Makker</h2>
+          <p>Læringsmakkeren din. Litt treg i matte. <span class="mode-pill" id="mode-pill">Øvingsmodus</span></p>
+        </div>
+        <label class="toggle"><input type="checkbox" id="speak-toggle" checked> Les høyt</label>
+      </div>
+      <div class="chat" id="chat" aria-live="polite"></div>
+      <div class="teach" id="teach" hidden>
+        <textarea id="explain" placeholder="Forklar for Makker med egne ord …" aria-label="Din forklaring"></textarea>
+        <div class="row">
+          <button class="btn ghost mic" id="mic" type="button"><span class="dot"></span><span id="mic-label">Snakk</span></button>
+          <select id="sr-lang" aria-label="Talespråk" style="font:inherit;padding:8px;border-radius:8px;border:2px solid var(--line);background:var(--paper);color:var(--ink)">
+            <option value="nb-NO">Norsk (nb-NO)</option>
+            <option value="no-NO">Norsk (no-NO)</option>
+            <option value="nn-NO">Nynorsk (nn-NO)</option>
+          </select>
+          <button class="btn green" id="send" type="button">Send til Makker</button>
+        </div>
+        <p class="note" id="mic-note" hidden></p>
+      </div>
+      <button class="btn" id="next" type="button" hidden>Neste oppgave</button>
+    </div>
+  </section>
+
+  <!-- FORELDER -->
+  <section id="view-forelder" hidden>
+    <div class="panel">
+      <div>
+        <p class="eyebrow">Ukeskort · uke 43</p>
+        <h2 class="sec">Slik jobber Ida denne uka</h2>
+      </div>
+      <div class="big">
+        <div><b id="k-solved">0</b><span>oppgaver løst</span></div>
+        <div><b id="k-self">0 %</b><span>løst uten hint eller med bare et spørsmål</span></div>
+        <div><b id="k-taught">0</b><span>ganger forklart til Makker</span></div>
+      </div>
+      <div class="legend">
+        <span><i class="c0"></i>Uten hint</span>
+        <span><i class="c1"></i>Spørsmål</span>
+        <span><i class="c2"></i>Tips</span>
+        <span><i class="c3"></i>Eksempel</span>
+      </div>
+      <div class="week" id="week"></div>
+
+      <div class="grid" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+        <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+          <p class="eyebrow">Det Ida har forklart</p>
+          <ul class="said" id="said"></ul>
+          <p class="fine">Du ser et kort sammendrag, ikke hele samtalen. Ida vet hva som deles.</p>
+        </div>
+        <div class="starter">
+          <p class="eyebrow">Spør ved middagen</p>
+          <p id="starter"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+"use strict";
+// ---------- Oppgaver (oppdiktet eksempelinnhold) ----------
+const TASKS = [
+  { topic:"Brøk", html:'Regn ut <span class="math">2/3 + 1/4</span>',
+    plain:"Regn ut 2/3 + 1/4", answers:["11/12"],
+    hints:[
+      ["Spørsmål","Hva forteller tallet under brøkstreken deg om bitene?"],
+      ["Tips","Tredjedeler og firedeler er ulike store biter. Kan du dele dem opp så alle bitene blir like store?"],
+      ["Eksempel","1/2 + 1/3 = 3/6 + 2/6 = 5/6. Gjør det samme med dine brøker."]],
+    wrong:"Jeg la bare sammen oppe og nede: 2+1 over 3+4. Så svaret er 3/7, ikke sant?",
+    keys:["nevner","felles","samme","like store","tolv","12","tolvdel","gange"],
+    follow:"Men hvorfor kan jeg ikke bare legge sammen tallene nederst også?",
+    aha:"Aha! Jeg må gjøre bitene like store først, til tolvdeler. 8/12 + 3/12 = 11/12. Takk!",
+    starter:"Ida forklarte Makker hvorfor man trenger fellesnevner. Be henne vise deg med en pizza eller en sjokoladeplate." },
+  { topic:"Prosent", html:'En jakke koster <span class="math">800 kr</span>. Den er satt ned <span class="math">25 %</span>. Hva koster den nå?',
+    plain:"En jakke koster 800 kr. Den er satt ned 25 %. Hva koster den nå?", answers:["600","600kr","600 kr","kr600"],
+    hints:[
+      ["Spørsmål","Hvor stor del av hele prisen er 25 %?"],
+      ["Tips","25 % er det samme som en firedel. Hvor mye er en firedel av 800?"],
+      ["Eksempel","10 % av 500 kr er 50 kr, så 500 − 50 = 450 kr."]],
+    wrong:"25 % rabatt … da trekker jeg fra 25 kroner. Jakka koster 775 kr!",
+    keys:["prosent","hundre","firedel","fjerdedel","kvart","200","del av","av 800","deler"],
+    follow:"Men 25 er jo 25. Hvorfor blir det ikke 25 kroner?",
+    aha:"Åh! 25 % betyr 25 av hver 100. Det er en firedel av 800, altså 200 kr. Da koster den 600 kr!",
+    starter:"Ida forklarte forskjellen på 25 % og 25 kroner. Neste gang dere ser et salgsskilt, la henne regne ut ny pris." },
+  { topic:"Likninger", html:'Løs likningen <span class="math">3x + 5 = 20</span>',
+    plain:"Løs likningen 3x + 5 = 20", answers:["5","x=5"],
+    hints:[
+      ["Spørsmål","Hva må bort for at 3x skal stå alene?"],
+      ["Tips","Trekk fra 5 på begge sider. Hva står igjen, og hva betyr 3x?"],
+      ["Eksempel","2x + 4 = 10 → 2x = 6 → x = 3."]],
+    wrong:"Jeg tok 20 − 5 = 15. Så x er 15!",
+    keys:["dele","del på","dividere","delt","tre","3x","begge sider","ganger","gange"],
+    follow:"Men det står jo 3x = 15. Er ikke x bare 15 da?",
+    aha:"Skjønner! 3x betyr tre x-er. Jeg må dele 15 på 3, så x = 5. Lurt!",
+    starter:"Ida lærte Makker å løse en likning. Spør henne hva «det samme på begge sider» betyr." }
+];
+
+// ---------- Eksempeldata for tidligere dager (oppdiktet) ----------
+// nivå: 0 = uten hint, 1 = spørsmål, 2 = tips, 3 = eksempel
+const PAST = [
+  {day:"Man", levels:[0,2,1,3], taught:1, said:"Hvorfor man ganger før man plusser"},
+  {day:"Tir", levels:[1,1,0], taught:2, said:"At areal er lengde ganger bredde, med tegning"},
+  {day:"Ons", levels:[3,2,2,1,0], taught:1, said:"Hvordan man finner gjennomsnitt"}
+];
+
+// ---------- Tilstand ----------
+const S = { i:0, hint:0, solved:false, teaching:false, tries:0, today:[], taught:0, said:[], history:[] };
+
+const $ = id => document.getElementById(id);
+const el = (t,c,txt) => { const e=document.createElement(t); if(c) e.className=c; if(txt!=null) e.textContent=txt; return e; };
+
+// ---------- Faner ----------
+function showTab(which){
+  $("tab-elev").setAttribute("aria-selected", which==="elev");
+  $("tab-forelder").setAttribute("aria-selected", which==="forelder");
+  $("view-elev").hidden = which!=="elev";
+  $("view-forelder").hidden = which!=="forelder";
+  if(which==="forelder") renderParent();
+}
+$("tab-elev").onclick = () => showTab("elev");
+$("tab-forelder").onclick = () => showTab("forelder");
+
+// ---------- Makker-ansikt og tale ----------
+function face(mood){ $("face").className = "face " + (mood||""); }
+let voice = null;
+function pickVoice(){
+  try{
+    const vs = speechSynthesis.getVoices();
+    voice = vs.find(v=>/^(nb|no|nn)\b/i.test(v.lang)) || vs.find(v=>/norsk|norw|bokm/i.test(v.name)) || null;
+  }catch(e){}
+}
+let voiceNoted = false;
+function voiceNote(){
+  if(voiceNoted) return; voiceNoted = true;
+  sys("Denne maskinen har ingen norsk stemme, så Makker leser ikke høyt. Det virker på Mac (stemmen Nora) og på Windows med norsk talepakke.");
+}
+try{ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }catch(e){}
+function say(text){
+  if(!$("speak-toggle").checked) return;
+  if(!voice){ voiceNote(); return; }
+  try{
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "nb-NO"; if(voice) u.voice = voice; u.rate = 1.02;
+    u.onstart = () => $("face").classList.add("talking");
+    u.onend = u.onerror = () => $("face").classList.remove("talking");
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+function makker(text, mood){
+  const m = el("div","msg m",text); $("chat").append(m); scrollChat();
+  if(mood) face(mood); say(text); return m;
+}
+function me(text){ $("chat").append(el("div","msg e",text)); scrollChat(); }
+function sys(text){ $("chat").append(el("div","msg sys",text)); scrollChat(); }
+function scrollChat(){ const c=$("chat"); c.scrollTop = c.scrollHeight; }
+
+// ---------- Oppgave ----------
+function renderTask(){
+  const t = TASKS[S.i];
+  const p = $("progress"); p.innerHTML="";
+  TASKS.forEach((_,k)=>{ const b=el("i"); if(k<S.i) b.className="done"; if(k===S.i) b.className="now"; p.append(b); });
+  $("task-label").textContent = `Oppgave ${S.i+1} av ${TASKS.length} · ${t.topic}`;
+  $("task-text").innerHTML = t.html;
+  $("answer").value=""; $("answer").disabled=false;
+  $("feedback").textContent=""; $("feedback").className="feedback";
+  $("stuck").disabled=false;
+  renderLadder();
+  $("chat").innerHTML="";
+  $("teach").hidden=true; $("next").hidden=true; S.mode=null;
+  makker("Hei Ida! Prøv selv først. Står du fast, trykker du «Jeg står fast», så hjelper jeg litt om gangen.","");
+}
+function renderLadder(){
+  const t = TASKS[S.i], L=$("ladder"); L.innerHTML="";
+  t.hints.forEach((h,k)=>{
+    const li = el("li","rung"+(k<S.hint?" open":""));
+    const b = el("b",null,String(k+1));
+    const d = el("div");
+    d.append(el("small",null,h[0]));
+    d.append(document.createTextNode(k<S.hint ? h[1] : "Låst til du trenger det"));
+    li.append(b,d); L.append(li);
+  });
+  $("stuck").textContent = S.hint>=3 ? "Ingen flere hint" : "Jeg står fast";
+  $("stuck").disabled = S.hint>=3 || S.solved;
+}
+$("stuck").onclick = () => {
+  if(S.hint>=3||S.solved) return;
+  S.hint++; renderLadder();
+  const t = TASKS[S.i], h = t.hints[S.hint-1][1];
+  const lead = ["Godt å si ifra! ","OK, et tips: ","Se på dette eksempelet: "][S.hint-1];
+  const tail = S.hint===1 ? " Svar meg her nede." : " Hva tenker du nå?";
+  makker(lead + h + tail);
+  S.mode = "hint"; S.tries = 0;
+  S.history = [{role:"assistant", content: lead + h}];
+  $("explain").placeholder = "Svar Makker, snakk eller skriv …";
+  $("teach").hidden = false; $("explain").value = ""; $("explain").focus();
+};
+
+function norm(s){ return s.toLowerCase().replace(/\s+/g,"").replace(",","."); }
+$("answer-form").onsubmit = e => {
+  e.preventDefault();
+  if(S.solved) return;
+  const t = TASKS[S.i], v = norm($("answer").value);
+  if(!v) return;
+  if(t.answers.map(norm).includes(v)){
+    S.solved = true;
+    S.today.push(S.hint);
+    $("feedback").textContent = S.hint===0 ? "Riktig, helt uten hint!" : `Riktig! Du brukte ${S.hint} av 3 hint.`;
+    $("feedback").className = "feedback good";
+    $("answer").disabled = true; renderLadder();
+    startTeaching();
+  } else {
+    $("feedback").textContent = "Ikke helt. Se på hvordan du tenkte, eller ta et hint.";
+    $("feedback").className = "feedback bad";
+  }
+};
+
+// ---------- Lær bort til Makker ----------
+function startTeaching(){
+  const t = TASKS[S.i];
+  S.teaching = true; S.tries = 0; S.mode = "teach";
+  S.history = [{role:"assistant", content:t.wrong}];
+  $("explain").placeholder = "Forklar for Makker med egne ord …";
+  sys("Nå bytter dere roller. Du er læreren.");
+  makker(t.wrong, "confused");
+  $("teach").hidden = false; $("explain").value=""; $("explain").focus();
+}
+
+async function sendExplain(){
+  const txt = $("explain").value.trim();
+  if(!txt) return;
+  if(S.mode==="hint" && !S.solved){ return hintReply(txt); }
+  if(!S.teaching) return;
+  stopMic();
+  me(txt); $("explain").value=""; $("send").disabled = true;
+  S.tries++;
+  S.history.push({role:"user", content:txt});
+  const t = TASKS[S.i];
+  let res = null;
+  if(sampleFn){
+    const thinking = el("div","msg m thinking","Makker tenker …"); $("chat").append(thinking); scrollChat();
+    try{ res = await askClaude(t); }catch(e){ res = null; if(e && (e.code==="not_granted"||e.code==="sampling_disabled")) setLive(false); }
+    thinking.remove();
+  }
+  if(!res) res = scripted(t, txt);
+  S.history.push({role:"assistant", content:res.reply});
+  makker(res.reply, res.understood ? "happy" : "confused");
+  if(res.understood){
+    S.teaching=false; S.taught++;
+    S.said.push({topic:t.topic, text:res.summary || summaryFallback(t)});
+    $("teach").hidden = true;
+    sys("Makker skjønte det. Du forklarte det selv!");
+    $("next").hidden = false;
+    $("next").textContent = S.i < TASKS.length-1 ? "Neste oppgave" : "Se ukeskortet";
+  }
+  $("send").disabled = false;
+}
+$("send").onclick = sendExplain;
+$("explain").addEventListener("keydown", e => { if(e.key==="Enter" && !e.shiftKey){ e.preventDefault(); sendExplain(); } });
+
+// Ida svarer på et hint: Makker veileder med spørsmål, aldri fasit
+async function hintReply(txt){
+  stopMic();
+  me(txt); $("explain").value=""; $("send").disabled = true;
+  S.tries++;
+  S.history.push({role:"user", content:txt});
+  const t = TASKS[S.i];
+  let reply = null;
+  if(sampleFn){
+    const thinking = el("div","msg m thinking","Makker tenker …"); $("chat").append(thinking); scrollChat();
+    try{
+      const convo = S.history.map(h => (h.role==="user"?"Ida: ":"Makker: ") + h.content).join("\n");
+      const r = await sampleFn(
+`Du er «Makker», en vennlig KI-læringsmakker for Ida (13 år, 8. trinn). Ida jobber med: ${t.plain} (riktig svar: ${t.answers[0]}, men det skal du ALDRI si eller regne helt ut).
+Hun har bedt om hint nummer ${S.hint} av 3: «${t.hints[S.hint-1][1]}»
+
+Samtalen så langt:
+${convo}
+
+Svar Ida på norsk bokmål, maks 2 korte setninger. Er hun på rett spor: bekreft konkret hva som er riktig og be henne ta neste steg selv. Er hun på feil spor: still ett lite, enklere spørsmål som leder henne videre. Ikke gi svaret, ikke regn ut siste steg. Bare selve svaret, ingen anførselstegn.`,
+        {modelTier:"quick", cache:false});
+      reply = r.text.trim();
+    }catch(e){ if(e && (e.code==="not_granted"||e.code==="sampling_disabled")) setLive(false); }
+    thinking.remove();
+  }
+  if(!reply){
+    const low = txt.toLowerCase();
+    const hit = t.keys.some(k=>low.includes(k));
+    reply = hit
+      ? "Ja, nettopp! Bruk det på oppgaven og skriv svaret ditt i feltet til venstre."
+      : (S.tries===1
+          ? "Godt at du tenker høyt! Se på oppgaven en gang til. Hva er det første du må gjøre?"
+          : "Det er helt greit å stå fast. Prøv et svar til venstre, eller trykk «Jeg står fast» for neste trinn.");
+  }
+  S.history.push({role:"assistant", content:reply});
+  makker(reply, "");
+  $("send").disabled = false;
+}
+
+function scripted(t, txt){
+  const low = txt.toLowerCase();
+  const hit = t.keys.some(k=>low.includes(k));
+  if(hit && txt.length>12) return {understood:true, reply:t.aha};
+  if(S.tries===1) return {understood:false, reply:t.follow};
+  if(S.tries===2) return {understood:false, reply:"Hmm, jeg henger ikke helt med. Kan du forklare det som om jeg var 8 år, kanskje med et eksempel?"};
+  return {understood:true, reply:t.aha};
+}
+function summaryFallback(t){ return {Brøk:"Hvorfor man trenger fellesnevner før man legger sammen brøker", Prosent:"At 25 % av 800 er en firedel, ikke 25 kroner", Likninger:"Hvordan man gjør det samme på begge sider og deler på 3"}[t.topic]; }
+
+$("next").onclick = () => {
+  if(S.i < TASKS.length-1){ S.i++; S.hint=0; S.solved=false; renderTask(); }
+  else showTab("forelder");
+};
+
+// ---------- Ekte Claude når siden kjører som artefakt ----------
+let sampleFn = null;
+function setLive(on){
+  const p=$("mode-pill"); p.textContent = on ? "Ekte KI" : "Øvingsmodus"; p.className = "mode-pill" + (on?" live":"");
+  if(!on) sampleFn = null;
+}
+(async()=>{
+  try{ if(window.claude && claude.use){ const s = await claude.use("sample"); if(s){ sampleFn = s; setLive(true); } } }catch(e){}
+})();
+
+async function askClaude(t){
+  const convo = S.history.map(h => (h.role==="user"?"Ida: ":"Makker: ") + h.content).join("\n");
+  const prompt =
+`Du spiller «Makker», en vennlig KI-læringsmakker for Ida (13 år, 8. trinn). Nå er rollene byttet: Ida er læreren og forklarer for Makker, som har misforstått.
+Oppgaven: ${t.plain}. Riktig svar: ${t.answers[0]}.
+Makkers misforståelse: «${t.wrong}»
+Kjerneideen Ida må forklare: ${t.aha}
+
+Samtalen så langt:
+${convo}
+
+Regler:
+- Svar på norsk bokmål, maks 2 korte setninger, varmt og litt nysgjerrig.
+- Ikke gi Ida svaret eller forklaringen selv. Er forklaringen hennes uklar eller feil, still ett konkret oppfølgingsspørsmål eller vis at du fortsatt er forvirret.
+- Sett understood=true bare når Ida har forklart kjerneideen med egne ord (det trenger ikke være perfekt). Da sier Makker «aha» og gjentar kort hva han lærte.
+- summary: én nøytral linje til forelderen om HVA Ida forklarte (ikke sitat, ikke vurdering av henne). Tom streng hvis understood=false.
+Svar KUN med JSON: {"reply":"...","understood":true|false,"summary":"..."}`;
+  const r = await sampleFn.json(prompt, {modelTier:"quick", cache:false});
+  if(!r || typeof r.reply!=="string") return null;
+  return {reply:r.reply, understood:!!r.understood, summary:String(r.summary||"")};
+}
+
+// ---------- Tale inn (fungerer i Chrome når filen åpnes lokalt) ----------
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, listening = false, baseText = "";
+function micNote(t){ $("mic-note").hidden = !t; $("mic-note").textContent = t||""; }
+function stopMic(){ if(rec && listening){ try{ rec.stop(); }catch(e){} } }
+$("mic").onclick = () => {
+  if(!SR){ micNote("Tale virker i Chrome eller Edge. Skriv forklaringen i feltet i stedet."); return; }
+  if(listening){ stopMic(); return; }
+  try{ speechSynthesis.cancel(); }catch(e){}
+  rec = new SR(); rec.lang = $("sr-lang").value; rec.interimResults = true; rec.continuous = true;
+  baseText = $("explain").value ? $("explain").value.trim()+" " : "";
+  rec.onresult = ev => {
+    let fin="", tmp="";
+    for(let k=0;k<ev.results.length;k++){ const r=ev.results[k]; (r.isFinal? (fin+=r[0].transcript) : (tmp+=r[0].transcript)); }
+    $("explain").value = baseText + fin + tmp;
+  };
+  rec.onstart = () => { listening=true; $("mic").classList.add("on"); $("mic-label").textContent="Stopp"; micNote("Jeg lytter … snakk i vei."); };
+  rec.onend = () => { listening=false; $("mic").classList.remove("on"); $("mic-label").textContent="Snakk"; if(!$("mic-note").dataset.err) micNote(""); };
+  rec.onerror = ev => {
+    $("mic-note").dataset.err = "1";
+    micNote(ev.error==="not-allowed"||ev.error==="service-not-allowed"
+      ? "Mikrofonen er ikke tillatt her. Last ned filen og åpne den i Chrome for å snakke, eller skriv i feltet."
+      : "Fikk ikke tak i talen. Prøv igjen, eller skriv i feltet.");
+    setTimeout(()=>{ delete $("mic-note").dataset.err; }, 50);
+  };
+  try{ rec.start(); }catch(e){ micNote("Kunne ikke starte mikrofonen. Skriv i feltet i stedet."); }
+};
+
+// ---------- Forelder ----------
+function renderParent(){
+  const days = PAST.concat([{day:"I dag", levels:S.today, taught:S.taught, said:null, today:true}]);
+  const W=$("week"); W.innerHTML="";
+  let all=[], taught=0;
+  days.forEach(d=>{
+    all = all.concat(d.levels); taught += d.taught;
+    const c = el("div","day"+(d.today?" today":""));
+    const h = el("h3",null,d.day); if(d.today) h.append(el("em",null,"Live"));
+    c.append(h);
+    const n = d.levels.length;
+    const st1 = el("div","stat"); st1.append(el("span",null,"Løst"), el("b",null,String(n))); c.append(st1);
+    const st2 = el("div","stat"); st2.append(el("span",null,"Forklart"), el("b",null,String(d.taught))); c.append(st2);
+    const m = el("div","meter");
+    if(n){ [0,1,2,3].forEach(lv=>{ const cnt=d.levels.filter(x=>x===lv).length; if(cnt){ const i=el("i","c"+lv); i.style.width=(cnt/n*100)+"%"; m.append(i);} }); }
+    c.append(m);
+    if(!n && d.today) c.append(el("p","fine","Ingen oppgaver ennå i dag."));
+    W.append(c);
+  });
+  $("k-solved").textContent = all.length;
+  $("k-self").textContent = all.length ? Math.round(all.filter(x=>x<=1).length/all.length*100)+" %" : "0 %";
+  $("k-taught").textContent = taught;
+  const L=$("said"); L.innerHTML="";
+  const items = S.said.map(s=>({when:"I dag · "+s.topic, text:s.text})).reverse()
+    .concat(PAST.slice().reverse().map(p=>({when:p.day, text:p.said})));
+  items.slice(0,4).forEach(it=>{ const li=el("li"); li.append(el("small",null,it.when), document.createTextNode(it.text)); L.append(li); });
+  const last = S.said.length ? TASKS.find(t=>t.topic===S.said[S.said.length-1].topic) : null;
+  $("starter").textContent = last ? last.starter : "Ida forklarte gjennomsnitt til Makker på onsdag. Spør henne hva som er gjennomsnittlig leggetid i familien deres.";
+}
+
+renderTask();
+})();
+</script>
