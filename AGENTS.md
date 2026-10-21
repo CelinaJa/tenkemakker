@@ -26,14 +26,14 @@ Open decisions are tracked in a live decision board (Claude artifact, linked in 
 1. **One file.** Everything stays in `index.html`. It must open by double-click in any browser with nothing installed.
 2. **Made-up data only.** Ida, class 8B, classmates, week history are fictional. Never add real names or personal data.
 3. **Makker never gives the answer.** Hints go question → tip → example. Any AI prompt must forbid revealing the final answer or doing the last step.
-4. **UI copy is Norwegian bokmål**, written for a 13-year-old: friendly, not babyish. Code comments may be Norwegian or English.
+4. **UI copy is Norwegian bokmål (default) and English**, toggled with NO/EN in the header. All copy lives in `STR` (UI) and the `nb`/`en` blocks of `TASKS`, `PAST`, `BADGES`; add every new string in both languages. Written for a 13-year-old: friendly, not babyish. Code comments may be Norwegian or English.
 5. **Two brains, both must work.**
    - *Published artifact*: real Claude via `claude.use("sample")` (`modelTier: "quick"`, `cache: false`). Shows "Ekte KI".
    - *Local file*: scripted replies using keyword lists per task. Shows "Øvingsmodus".
    Every AI feature needs a scripted fallback.
 6. **Voice** uses the browser Web Speech API only (no keys, no installs):
-   - Speech-to-text: `SpeechRecognition`, language selectable (`nb-NO` / `no-NO` / `nn-NO`). Works in Google Chrome/Edge on a local file; blocked inside the artifact frame — degrade to typing with a clear message.
-   - Text-to-speech: `speechSynthesis` with a Norwegian voice only. If none is installed, stay silent and say so once (never read Norwegian with an English voice).
+   - Speech-to-text: `SpeechRecognition`, language selectable (`nb-NO` / `no-NO` / `nn-NO`, or `en-GB` / `en-US` in English mode). Works in Google Chrome/Edge on a local file; blocked inside the artifact frame — degrade to typing with a clear message.
+   - Text-to-speech: `speechSynthesis` with a voice matching the current language (Norwegian voice for Norwegian, English for English). If none is installed, stay silent and say so once (never read Norwegian with an English voice).
 7. **Points reward thinking, not speed.** See the TP table in `DESIGN.md`. Wrong answers never cost points.
 8. **Ask before** installing anything, adding API keys, or using accounts.
 9. **Theme + phone.** Colors are CSS tokens with light/dark variants; layout must work at ~390px with no horizontal scroll. Respect `prefers-reduced-motion`.

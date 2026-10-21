@@ -218,6 +218,10 @@ h2.sec{font-family:var(--f-game);font-weight:400;font-size:1.4rem;margin:0;lette
 .starter{background:var(--sun);border-radius:20px;padding:16px 18px;color:#1e1748}
 .starter p{margin:0}
 .starter .eyebrow{color:#1e1748;opacity:.7}
+/* Språkvelger */
+.head-right{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.tabs.lang button{padding:8px 12px}
+.tabs.lang button[aria-pressed="true"]{background:var(--mint);color:#06352a}
 </style>
 
 <canvas id="confetti" aria-hidden="true"></canvas>
@@ -226,25 +230,31 @@ h2.sec{font-family:var(--f-game);font-weight:400;font-size:1.4rem;margin:0;lette
     <div class="logo">
       <div>
         <h1>Tenke<span>makker</span></h1>
-        <p>Tankepoeng for å tenke selv. Oppdiktet klasse 8B.</p>
+        <p data-i18n="tagline">Tankepoeng for å tenke selv. Oppdiktet klasse 8B.</p>
       </div>
     </div>
-    <div class="tabs" role="tablist">
-      <button id="tab-elev" role="tab" aria-selected="true">Ida</button>
-      <button id="tab-forelder" role="tab" aria-selected="false">Forelder</button>
+    <div class="head-right">
+      <div class="tabs" role="tablist">
+        <button id="tab-elev" role="tab" aria-selected="true">Ida</button>
+        <button id="tab-forelder" role="tab" aria-selected="false" data-i18n="tabParent">Forelder</button>
+      </div>
+      <div class="tabs lang" role="group" aria-label="Språk / Language">
+        <button id="lang-nb" type="button" aria-pressed="true" lang="nb" title="Norsk">NO</button>
+        <button id="lang-en" type="button" aria-pressed="false" lang="en" title="English">EN</button>
+      </div>
     </div>
   </header>
 
   <!-- ELEV -->
   <div id="view-elev" style="display:flex;flex-direction:column;gap:16px">
-    <section class="hud" aria-label="Din status">
+    <section class="hud" data-i18n-aria="hudAria" aria-label="Din status">
       <div class="avatar">I<small id="lvl">Nv 2</small></div>
       <div class="xp">
         <div class="xp-top"><b id="lvl-name">Nivå 2 · Tenker</b><span id="xp-text">40 / 100 TP til nivå 3</span></div>
         <div class="bar"><i id="xp-bar" style="width:40%"></i></div>
       </div>
-      <div class="chip tp" title="Tankepoeng denne uka"><span class="coin">TP</span><div><span id="tp">140</span><small>tankepoeng</small></div></div>
-      <div class="chip streak" title="Dager på rad"><span class="flame"></span><div><span id="streak">3</span><small>dager på rad</small></div></div>
+      <div class="chip tp" data-i18n-title="tpTitle" title="Tankepoeng denne uka"><span class="coin">TP</span><div><span id="tp">140</span><small data-i18n="tpWord">tankepoeng</small></div></div>
+      <div class="chip streak" data-i18n-title="streakTitle" title="Dager på rad"><span class="flame"></span><div><span id="streak">3</span><small data-i18n="streakWord">dager på rad</small></div></div>
     </section>
 
     <section class="grid">
@@ -252,16 +262,16 @@ h2.sec{font-family:var(--f-game);font-weight:400;font-size:1.4rem;margin:0;lette
         <div class="steps" id="progress"></div>
         <p class="task" id="task-text"></p>
         <form class="answer" id="answer-form">
-          <input id="answer" autocomplete="off" placeholder="Ditt svar" aria-label="Ditt svar">
-          <button class="btn" type="submit">Sjekk</button>
+          <input id="answer" autocomplete="off" data-i18n-ph="yourAnswer" data-i18n-aria="yourAnswer" placeholder="Ditt svar" aria-label="Ditt svar">
+          <button class="btn" type="submit" data-i18n="check">Sjekk</button>
         </form>
         <p class="feedback" id="feedback" aria-live="polite"></p>
         <div class="ladder-head">
-          <p class="eyebrow">Hintstigen</p>
+          <p class="eyebrow" data-i18n="ladder">Hintstigen</p>
           <button class="btn ghost" id="stuck" type="button">Jeg står fast</button>
         </div>
         <ol class="ladder" id="ladder"></ol>
-        <p class="rule">Feil svar koster ingenting. Færre hint gir flere poeng, og mest får du for å lære bort.</p>
+        <p class="rule" data-i18n="rule">Feil svar koster ingenting. Færre hint gir flere poeng, og mest får du for å lære bort.</p>
       </div>
 
       <div class="panel">
@@ -269,21 +279,17 @@ h2.sec{font-family:var(--f-game);font-weight:400;font-size:1.4rem;margin:0;lette
           <div class="makker" id="face"><div class="ant"></div><div class="body"></div><div class="eye l"></div><div class="eye r"></div><div class="mouth"></div></div>
           <div>
             <h2>Makker</h2>
-            <p>Din læringsmakker. Elsker spørsmål, hater fasit. <span class="mode-pill" id="mode-pill">Øvingsmodus</span></p>
+            <p><span data-i18n="makkerTag">Din læringsmakker. Elsker spørsmål, hater fasit.</span> <span class="mode-pill" id="mode-pill">Øvingsmodus</span></p>
           </div>
-          <label class="toggle"><input type="checkbox" id="speak-toggle" checked> Les høyt</label>
+          <label class="toggle"><input type="checkbox" id="speak-toggle" checked> <span data-i18n="readAloud">Les høyt</span></label>
         </div>
         <div class="chat" id="chat" aria-live="polite"></div>
         <div class="teach" id="teach" hidden>
-          <textarea id="explain" placeholder="Forklar for Makker med egne ord …" aria-label="Ditt svar til Makker"></textarea>
+          <textarea id="explain" placeholder="Forklar for Makker med egne ord …" data-i18n-aria="replyAria" aria-label="Ditt svar til Makker"></textarea>
           <div class="row">
             <button class="btn ghost mic" id="mic" type="button"><span class="dot"></span><span id="mic-label">Snakk</span></button>
-            <select id="sr-lang" aria-label="Talespråk">
-              <option value="nb-NO">Norsk (nb-NO)</option>
-              <option value="no-NO">Norsk (no-NO)</option>
-              <option value="nn-NO">Nynorsk (nn-NO)</option>
-            </select>
-            <button class="btn mintb" id="send" type="button">Send til Makker</button>
+            <select id="sr-lang" data-i18n-aria="srAria" aria-label="Talespråk"></select>
+            <button class="btn mintb" id="send" type="button" data-i18n="send">Send til Makker</button>
           </div>
           <p class="note" id="mic-note" hidden></p>
         </div>
@@ -294,27 +300,27 @@ h2.sec{font-family:var(--f-game);font-weight:400;font-size:1.4rem;margin:0;lette
     <section class="lower">
       <div class="panel">
         <div class="sec-head">
-          <h2 class="sec">Klasse 8B denne uka</h2>
-          <div class="seg" role="group" aria-label="Visning">
-            <button id="m-vs" aria-pressed="true">Mot hverandre</button>
-            <button id="m-tog" aria-pressed="false">Sammen</button>
+          <h2 class="sec" data-i18n="classTitle">Klasse 8B denne uka</h2>
+          <div class="seg" role="group" data-i18n-aria="viewAria" aria-label="Visning">
+            <button id="m-vs" aria-pressed="true" data-i18n="vs">Mot hverandre</button>
+            <button id="m-tog" aria-pressed="false" data-i18n="tog">Sammen</button>
           </div>
         </div>
         <div id="vs">
           <p class="near" id="near"></p>
           <ol class="board" id="board" style="margin-top:10px"></ol>
-          <p class="fine" style="margin-top:10px">Lista nullstilles hver mandag. Poeng gis for tenking, ikke for fart.</p>
+          <p class="fine" style="margin-top:10px" data-i18n="resetNote">Lista nullstilles hver mandag. Poeng gis for tenking, ikke for fart.</p>
         </div>
         <div id="tog" class="goal" hidden>
-          <p class="eyebrow">Klassemål: 1500 TP gir filmfredag</p>
+          <p class="eyebrow" data-i18n="goalTitle">Klassemål: 1500 TP gir filmfredag</p>
           <div class="big"><span id="goal-num">0</span> <span style="font-size:1.1rem;color:var(--muted)">/ 1500 TP</span></div>
           <div class="bar"><i id="goal-bar"></i></div>
           <div class="contrib" id="contrib"></div>
-          <p class="fine">Alle poeng teller likt mot målet. Ingen rangering.</p>
+          <p class="fine" data-i18n="goalNote">Alle poeng teller likt mot målet. Ingen rangering.</p>
         </div>
       </div>
       <div class="panel">
-        <h2 class="sec">Merker</h2>
+        <h2 class="sec" data-i18n="badgesTitle">Merker</h2>
         <div class="badges" id="badges"></div>
       </div>
     </section>
@@ -324,30 +330,30 @@ h2.sec{font-family:var(--f-game);font-weight:400;font-size:1.4rem;margin:0;lette
   <section id="view-forelder" hidden>
     <div class="panel">
       <div>
-        <p class="eyebrow">Ukeskort · uke 43</p>
-        <h2 class="sec">Slik jobber Ida denne uka</h2>
+        <p class="eyebrow" data-i18n="weekEyebrow">Ukeskort · uke 43</p>
+        <h2 class="sec" data-i18n="weekTitle">Slik jobber Ida denne uka</h2>
       </div>
       <div class="big3">
-        <div><b id="k-solved">0</b><span>oppgaver løst</span></div>
-        <div><b id="k-self">0 %</b><span>løst uten hint eller med bare et spørsmål</span></div>
-        <div><b id="k-taught">0</b><span>ganger forklart til Makker</span></div>
-        <div><b id="k-tp">0</b><span>tankepoeng</span></div>
+        <div><b id="k-solved">0</b><span data-i18n="kSolved">oppgaver løst</span></div>
+        <div><b id="k-self">0 %</b><span data-i18n="kSelf">løst uten hint eller med bare et spørsmål</span></div>
+        <div><b id="k-taught">0</b><span data-i18n="kTaught">ganger forklart til Makker</span></div>
+        <div><b id="k-tp">0</b><span data-i18n="kTp">tankepoeng</span></div>
       </div>
       <div class="legend">
-        <span><i class="c0"></i>Uten hint</span>
-        <span><i class="c1"></i>Spørsmål</span>
-        <span><i class="c2"></i>Tips</span>
-        <span><i class="c3"></i>Eksempel</span>
+        <span><i class="c0"></i><span data-i18n="lg0">Uten hint</span></span>
+        <span><i class="c1"></i><span data-i18n="lg1">Spørsmål</span></span>
+        <span><i class="c2"></i><span data-i18n="lg2">Tips</span></span>
+        <span><i class="c3"></i><span data-i18n="lg3">Eksempel</span></span>
       </div>
       <div class="week" id="week"></div>
       <div class="grid">
         <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
-          <p class="eyebrow">Det Ida har forklart</p>
+          <p class="eyebrow" data-i18n="saidTitle">Det Ida har forklart</p>
           <ul class="said" id="said"></ul>
-          <p class="fine">Du ser et kort sammendrag, ikke hele samtalen. Ida vet hva som deles.</p>
+          <p class="fine" data-i18n="saidNote">Du ser et kort sammendrag, ikke hele samtalen. Ida vet hva som deles.</p>
         </div>
         <div class="starter">
-          <p class="eyebrow">Spør ved middagen</p>
+          <p class="eyebrow" data-i18n="dinner">Spør ved middagen</p>
           <p id="starter"></p>
         </div>
       </div>
@@ -358,45 +364,219 @@ h2.sec{font-family:var(--f-game);font-weight:400;font-size:1.4rem;margin:0;lette
 <script>
 (function(){
 "use strict";
+// ---------- Språk: norsk bokmål (standard) og engelsk ----------
+const STR = {
+  nb:{
+    tagline:"Tankepoeng for å tenke selv. Oppdiktet klasse 8B.",
+    tabParent:"Forelder", hudAria:"Din status",
+    tpTitle:"Tankepoeng denne uka", tpWord:"tankepoeng",
+    streakTitle:"Dager på rad", streakWord:"dager på rad",
+    yourAnswer:"Ditt svar", check:"Sjekk",
+    ladder:"Hintstigen",
+    rule:"Feil svar koster ingenting. Færre hint gir flere poeng, og mest får du for å lære bort.",
+    makkerTag:"Din læringsmakker. Elsker spørsmål, hater fasit.",
+    readAloud:"Les høyt", replyAria:"Ditt svar til Makker",
+    talk:"Snakk", stop:"Stopp", srAria:"Talespråk", send:"Send til Makker",
+    nextTask:"Neste oppgave", seeParent:"Se forelderkortet",
+    classTitle:"Klasse 8B denne uka", viewAria:"Visning", vs:"Mot hverandre", tog:"Sammen",
+    resetNote:"Lista nullstilles hver mandag. Poeng gis for tenking, ikke for fart.",
+    goalTitle:"Klassemål: 1500 TP gir filmfredag",
+    goalNote:"Alle poeng teller likt mot målet. Ingen rangering.",
+    badgesTitle:"Merker",
+    weekEyebrow:"Ukeskort · uke 43", weekTitle:"Slik jobber Ida denne uka",
+    kSolved:"oppgaver løst", kSelf:"løst uten hint eller med bare et spørsmål",
+    kTaught:"ganger forklart til Makker", kTp:"tankepoeng",
+    lg0:"Uten hint", lg1:"Spørsmål", lg2:"Tips", lg3:"Eksempel",
+    saidTitle:"Det Ida har forklart",
+    saidNote:"Du ser et kort sammendrag, ikke hele samtalen. Ida vet hva som deles.",
+    dinner:"Spør ved middagen",
+    practice:"Øvingsmodus", live:"Ekte KI",
+    levels:["Nysgjerrig","Tenker","Utforsker","Problemknuser","Mester","Legende"],
+    lvlShort:n=>"Nv " + n,
+    lvlName:(n,name)=>`Nivå ${n} · ${name}`,
+    xpText:(n,next)=>`${n} TP til nivå ${next}`,
+    levelUp:name=>`Nytt nivå! Du er nå ${name}.`,
+    newBadge:name=>"Nytt merke: " + name,
+    meName:"Ida (deg)",
+    climbed:n=>`Du klatret til plass ${n}!`,
+    near:(n,name)=>`Du er ${n} TP fra å gå forbi ${name}.`,
+    leading:"Du leder uka! Kan du lære bort noe til en klassekamerat?",
+    noVoice:"Ingen norsk stemme på denne maskinen, så Makker leser ikke høyt.",
+    greetFirst:"Hei Ida! Klar for dagens tre? Prøv selv først. Står du fast, hjelper jeg litt om gangen.",
+    greetNext:"Ny oppgave! Ta den i ditt tempo.",
+    locked:"Låst til du trenger det", stuck:"Jeg står fast", noMoreHints:"Ingen flere hint",
+    hintLeads:["Bra at du sier ifra! ","OK, et tips: ","Se på dette eksempelet: "],
+    hintTail1:" Svar meg her nede.", hintTail:" Hva tenker du nå?",
+    hintPh:"Svar Makker, snakk eller skriv …", teachPh:"Forklar for Makker med egne ord …",
+    right0:"Riktig, helt uten hint!", rightN:n=>`Riktig! Du brukte ${n} av 3 hint.`,
+    popSelf:"Tenkte selv", popSolved:"Løst", streakToast:n=>`${n} dager på rad!`,
+    wrongAns:"Ikke helt. Feil koster ingenting. Prøv igjen eller ta et hint.",
+    swap:n=>`Rollebytte! Lær Makker det, og få +${n} TP`,
+    thinking:"Makker tenker …", teachBonus:"Lærer-bonus", allDone:"Alle tre ferdig. Sterkt jobba!",
+    hintHit:"Ja, nettopp! Bruk det på oppgaven og skriv svaret ditt i feltet.",
+    hintMiss1:"Godt at du tenker høyt! Se på oppgaven en gang til. Hva er det første du må gjøre?",
+    hintMiss2:"Helt greit å stå fast. Prøv et svar, eller trykk «Jeg står fast» for neste trinn.",
+    thinkAloud:"Tenkte høyt",
+    confused:"Hmm, jeg henger ikke helt med. Kan du forklare det med et eksempel?",
+    aiLang:"norsk bokmål",
+    noSR:"Tale virker i Google Chrome eller Edge. Skriv i feltet i stedet.",
+    listening:"Jeg lytter … snakk i vei.",
+    micBlocked:"Mikrofonen er ikke tillatt her. Åpne filen i Google Chrome for å snakke, eller skriv i feltet.",
+    srFail:"Fikk ikke tak i talen. Prøv igjen, eller skriv i feltet.",
+    micFail:"Kunne ikke starte mikrofonen. Skriv i feltet i stedet.",
+    srLangs:[["nb-NO","Norsk (nb-NO)"],["no-NO","Norsk (no-NO)"],["nn-NO","Nynorsk (nn-NO)"]],
+    today:"I dag", liveTag:"Live", solvedStat:"Løst", taughtStat:"Forklart",
+    noTasksYet:"Ingen oppgaver ennå i dag.",
+    defaultStarter:"Ida forklarte gjennomsnitt til Makker på onsdag. Spør henne hva som er gjennomsnittlig leggetid i familien deres."
+  },
+  en:{
+    tagline:"Thinking points for thinking for yourself. Fictional class 8B.",
+    tabParent:"Parent", hudAria:"Your status",
+    tpTitle:"Thinking points this week", tpWord:"thinking points",
+    streakTitle:"Days in a row", streakWord:"days in a row",
+    yourAnswer:"Your answer", check:"Check",
+    ladder:"Hint ladder",
+    rule:"Wrong answers cost nothing. Fewer hints give more points, and you get the most for teaching.",
+    makkerTag:"Your learning buddy. Loves questions, hates answer keys.",
+    readAloud:"Read aloud", replyAria:"Your reply to Makker",
+    talk:"Talk", stop:"Stop", srAria:"Speech language", send:"Send to Makker",
+    nextTask:"Next task", seeParent:"See the parent card",
+    classTitle:"Class 8B this week", viewAria:"View", vs:"Head to head", tog:"Together",
+    resetNote:"The list resets every Monday. Points are for thinking, not speed.",
+    goalTitle:"Class goal: 1500 TP earns movie Friday",
+    goalNote:"Every point counts the same towards the goal. No ranking.",
+    badgesTitle:"Badges",
+    weekEyebrow:"Week card · week 43", weekTitle:"How Ida is working this week",
+    kSolved:"tasks solved", kSelf:"solved with no hints or just a question",
+    kTaught:"times explained to Makker", kTp:"thinking points",
+    lg0:"No hints", lg1:"Question", lg2:"Tip", lg3:"Example",
+    saidTitle:"What Ida has explained",
+    saidNote:"You see a short summary, not the whole conversation. Ida knows what is shared.",
+    dinner:"Ask at dinner",
+    practice:"Practice mode", live:"Real AI",
+    levels:["Curious","Thinker","Explorer","Problem Crusher","Master","Legend"],
+    lvlShort:n=>"Lv " + n,
+    lvlName:(n,name)=>`Level ${n} · ${name}`,
+    xpText:(n,next)=>`${n} TP to level ${next}`,
+    levelUp:name=>`New level! You're now ${name}.`,
+    newBadge:name=>"New badge: " + name,
+    meName:"Ida (you)",
+    climbed:n=>`You climbed to place ${n}!`,
+    near:(n,name)=>`You're ${n} TP from passing ${name}.`,
+    leading:"You're leading the week! Could you teach something to a classmate?",
+    noVoice:"No English voice on this computer, so Makker won't read aloud.",
+    greetFirst:"Hi Ida! Ready for today's three? Try on your own first. If you get stuck, I'll help a little at a time.",
+    greetNext:"New task! Take it at your own pace.",
+    locked:"Locked until you need it", stuck:"I'm stuck", noMoreHints:"No more hints",
+    hintLeads:["Good call asking! ","OK, here's a tip: ","Look at this example: "],
+    hintTail1:" Answer me down here.", hintTail:" What are you thinking now?",
+    hintPh:"Answer Makker, talk or type …", teachPh:"Explain it to Makker in your own words …",
+    right0:"Correct, with no hints at all!", rightN:n=>`Correct! You used ${n} of 3 hints.`,
+    popSelf:"Thought for yourself", popSolved:"Solved", streakToast:n=>`${n} days in a row!`,
+    wrongAns:"Not quite. Mistakes cost nothing. Try again or take a hint.",
+    swap:n=>`Role swap! Teach Makker and get +${n} TP`,
+    thinking:"Makker is thinking …", teachBonus:"Teacher bonus", allDone:"All three done. Great work!",
+    hintHit:"Yes, exactly! Use that on the task and type your answer in the box.",
+    hintMiss1:"Nice thinking out loud! Look at the task again. What's the first thing you need to do?",
+    hintMiss2:"It's fine to be stuck. Try an answer, or press “I'm stuck” for the next step.",
+    thinkAloud:"Thought aloud",
+    confused:"Hmm, I'm not quite following. Can you explain it with an example?",
+    aiLang:"engelsk (English)",
+    noSR:"Speech works in Google Chrome or Edge. Type in the box instead.",
+    listening:"I'm listening … go ahead.",
+    micBlocked:"The microphone isn't allowed here. Open the file in Google Chrome to talk, or type in the box.",
+    srFail:"Couldn't catch that. Try again, or type in the box.",
+    micFail:"Couldn't start the microphone. Type in the box instead.",
+    srLangs:[["en-GB","English (en-GB)"],["en-US","English (en-US)"]],
+    today:"Today", liveTag:"Live", solvedStat:"Solved", taughtStat:"Explained",
+    noTasksYet:"No tasks yet today.",
+    defaultStarter:"Ida explained averages to Makker on Wednesday. Ask her what the average bedtime is in your family."
+  }
+};
+let LANG = "nb";
+try{ const saved = localStorage.getItem("tenkemakker-lang"); if(saved==="nb" || saved==="en") LANG = saved; }catch(e){}
+function tr(key, ...a){ const v = STR[LANG][key]; return typeof v==="function" ? v(...a) : v; }
+
 // ---------- Oppgaver (oppdiktet eksempelinnhold) ----------
 const TASKS = [
-  { topic:"Brøk", html:'Regn ut <span class="math">2/3 + 1/4</span>',
-    plain:"Regn ut 2/3 + 1/4", answers:["11/12"],
-    hints:[
-      ["Spørsmål","Hva forteller tallet under brøkstreken deg om bitene?"],
-      ["Tips","Tredjedeler og firedeler er ulike store biter. Kan du dele dem opp så alle bitene blir like store?"],
-      ["Eksempel","1/2 + 1/3 = 3/6 + 2/6 = 5/6. Gjør det samme med dine brøker."]],
-    wrong:"Jeg la bare sammen oppe og nede: 2+1 over 3+4. Så svaret er 3/7, ikke sant?",
-    keys:["nevner","felles","samme","like store","tolv","12","tolvdel","gange","biter"],
-    follow:"Men hvorfor kan jeg ikke bare legge sammen tallene nederst også?",
-    aha:"Aha! Jeg må gjøre bitene like store først, til tolvdeler. 8/12 + 3/12 = 11/12. Takk!",
-    sum:"Hvorfor man trenger fellesnevner før man legger sammen brøker",
-    starter:"Ida forklarte Makker hvorfor man trenger fellesnevner. Be henne vise deg med en pizza eller en sjokoladeplate." },
-  { topic:"Prosent", html:'En hoodie koster <span class="math">800 kr</span>. Den er satt ned <span class="math">25 %</span>. Hva koster den nå?',
-    plain:"En hoodie koster 800 kr. Den er satt ned 25 %. Hva koster den nå?", answers:["600","600kr","kr600"],
-    hints:[
-      ["Spørsmål","Hvor stor del av hele prisen er 25 %?"],
-      ["Tips","25 % er det samme som en firedel. Hvor mye er en firedel av 800?"],
-      ["Eksempel","10 % av 500 kr er 50 kr, så 500 − 50 = 450 kr."]],
-    wrong:"25 % rabatt … da trekker jeg fra 25 kroner. Hoodien koster 775 kr!",
-    keys:["prosent","hundre","firedel","fjerdedel","kvart","200","del av","av 800","deler"],
-    follow:"Men 25 er jo 25. Hvorfor blir det ikke 25 kroner?",
-    aha:"Åh! 25 % betyr 25 av hver 100. Det er en firedel av 800, altså 200 kr. Da koster den 600 kr!",
-    sum:"At 25 % av 800 er en firedel, ikke 25 kroner",
-    starter:"Ida forklarte forskjellen på 25 % og 25 kroner. Neste gang dere ser et salgsskilt, la henne regne ut ny pris." },
-  { topic:"Likninger", html:'Løs likningen <span class="math">3x + 5 = 20</span>',
-    plain:"Løs likningen 3x + 5 = 20", answers:["5","x=5"],
-    hints:[
-      ["Spørsmål","Hva må bort for at 3x skal stå alene?"],
-      ["Tips","Trekk fra 5 på begge sider. Hva står igjen, og hva betyr 3x?"],
-      ["Eksempel","2x + 4 = 10 → 2x = 6 → x = 3."]],
-    wrong:"Jeg tok 20 − 5 = 15. Så x er 15!",
-    keys:["dele","del på","dividere","delt","tre","3x","begge sider","ganger","gange"],
-    follow:"Men det står jo 3x = 15. Er ikke x bare 15 da?",
-    aha:"Skjønner! 3x betyr tre x-er. Jeg må dele 15 på 3, så x = 5. Lurt!",
-    sum:"Hvordan man gjør det samme på begge sider og deler på 3",
-    starter:"Ida lærte Makker å løse en likning. Spør henne hva «det samme på begge sider» betyr." }
+  { answers:["11/12"],
+    nb:{ topic:"Brøk", html:'Regn ut <span class="math">2/3 + 1/4</span>',
+      plain:"Regn ut 2/3 + 1/4",
+      hints:[
+        ["Spørsmål","Hva forteller tallet under brøkstreken deg om bitene?"],
+        ["Tips","Tredjedeler og firedeler er ulike store biter. Kan du dele dem opp så alle bitene blir like store?"],
+        ["Eksempel","1/2 + 1/3 = 3/6 + 2/6 = 5/6. Gjør det samme med dine brøker."]],
+      wrong:"Jeg la bare sammen oppe og nede: 2+1 over 3+4. Så svaret er 3/7, ikke sant?",
+      keys:["nevner","felles","samme","like store","tolv","12","tolvdel","gange","biter"],
+      follow:"Men hvorfor kan jeg ikke bare legge sammen tallene nederst også?",
+      aha:"Aha! Jeg må gjøre bitene like store først, til tolvdeler. 8/12 + 3/12 = 11/12. Takk!",
+      sum:"Hvorfor man trenger fellesnevner før man legger sammen brøker",
+      starter:"Ida forklarte Makker hvorfor man trenger fellesnevner. Be henne vise deg med en pizza eller en sjokoladeplate." },
+    en:{ topic:"Fractions", html:'Work out <span class="math">2/3 + 1/4</span>',
+      plain:"Work out 2/3 + 1/4",
+      hints:[
+        ["Question","What does the number under the fraction line tell you about the pieces?"],
+        ["Tip","Thirds and quarters are different-sized pieces. Can you split them up so all the pieces are the same size?"],
+        ["Example","1/2 + 1/3 = 3/6 + 2/6 = 5/6. Do the same with your fractions."]],
+      wrong:"I just added the tops and the bottoms: 2+1 over 3+4. So the answer is 3/7, right?",
+      keys:["denominator","common","same","same size","twelve","12","twelfth","multiply","times","pieces"],
+      follow:"But why can't I just add the bottom numbers too?",
+      aha:"Aha! I have to make the pieces the same size first, into twelfths. 8/12 + 3/12 = 11/12. Thanks!",
+      sum:"Why you need a common denominator before adding fractions",
+      starter:"Ida explained to Makker why you need a common denominator. Ask her to show you with a pizza or a chocolate bar." } },
+  { answers:["600","600kr","kr600"],
+    nb:{ topic:"Prosent", html:'En hoodie koster <span class="math">800 kr</span>. Den er satt ned <span class="math">25 %</span>. Hva koster den nå?',
+      plain:"En hoodie koster 800 kr. Den er satt ned 25 %. Hva koster den nå?",
+      hints:[
+        ["Spørsmål","Hvor stor del av hele prisen er 25 %?"],
+        ["Tips","25 % er det samme som en firedel. Hvor mye er en firedel av 800?"],
+        ["Eksempel","10 % av 500 kr er 50 kr, så 500 − 50 = 450 kr."]],
+      wrong:"25 % rabatt … da trekker jeg fra 25 kroner. Hoodien koster 775 kr!",
+      keys:["prosent","hundre","firedel","fjerdedel","kvart","200","del av","av 800","deler"],
+      follow:"Men 25 er jo 25. Hvorfor blir det ikke 25 kroner?",
+      aha:"Åh! 25 % betyr 25 av hver 100. Det er en firedel av 800, altså 200 kr. Da koster den 600 kr!",
+      sum:"At 25 % av 800 er en firedel, ikke 25 kroner",
+      starter:"Ida forklarte forskjellen på 25 % og 25 kroner. Neste gang dere ser et salgsskilt, la henne regne ut ny pris." },
+    en:{ topic:"Percent", html:'A hoodie costs <span class="math">800 kr</span>. It is <span class="math">25 %</span> off. What does it cost now?',
+      plain:"A hoodie costs 800 kr. It is 25 % off. What does it cost now?",
+      hints:[
+        ["Question","How big a part of the whole price is 25 %?"],
+        ["Tip","25 % is the same as a quarter. What is a quarter of 800?"],
+        ["Example","10 % of 500 kr is 50 kr, so 500 − 50 = 450 kr."]],
+      wrong:"25 % off … so I take away 25 kroner. The hoodie costs 775 kr!",
+      keys:["percent","per cent","hundred","quarter","fourth","200","part of","of 800","divide"],
+      follow:"But 25 is just 25. Why isn't it 25 kroner?",
+      aha:"Oh! 25 % means 25 out of every 100. That's a quarter of 800, so 200 kr. Then it costs 600 kr!",
+      sum:"That 25 % of 800 is a quarter, not 25 kroner",
+      starter:"Ida explained the difference between 25 % and 25 kroner. Next time you see a sale sign, let her work out the new price." } },
+  { answers:["5","x=5"],
+    nb:{ topic:"Likninger", html:'Løs likningen <span class="math">3x + 5 = 20</span>',
+      plain:"Løs likningen 3x + 5 = 20",
+      hints:[
+        ["Spørsmål","Hva må bort for at 3x skal stå alene?"],
+        ["Tips","Trekk fra 5 på begge sider. Hva står igjen, og hva betyr 3x?"],
+        ["Eksempel","2x + 4 = 10 → 2x = 6 → x = 3."]],
+      wrong:"Jeg tok 20 − 5 = 15. Så x er 15!",
+      keys:["dele","del på","dividere","delt","tre","3x","begge sider","ganger","gange"],
+      follow:"Men det står jo 3x = 15. Er ikke x bare 15 da?",
+      aha:"Skjønner! 3x betyr tre x-er. Jeg må dele 15 på 3, så x = 5. Lurt!",
+      sum:"Hvordan man gjør det samme på begge sider og deler på 3",
+      starter:"Ida lærte Makker å løse en likning. Spør henne hva «det samme på begge sider» betyr." },
+    en:{ topic:"Equations", html:'Solve the equation <span class="math">3x + 5 = 20</span>',
+      plain:"Solve the equation 3x + 5 = 20",
+      hints:[
+        ["Question","What has to go so that 3x stands alone?"],
+        ["Tip","Subtract 5 from both sides. What's left, and what does 3x mean?"],
+        ["Example","2x + 4 = 10 → 2x = 6 → x = 3."]],
+      wrong:"I did 20 − 5 = 15. So x is 15!",
+      keys:["divide","divided","split","three","3x","both sides","times","multiply"],
+      follow:"But it says 3x = 15. Isn't x just 15 then?",
+      aha:"Got it! 3x means three x's. I have to divide 15 by 3, so x = 5. Clever!",
+      sum:"How to do the same thing on both sides and divide by 3",
+      starter:"Ida taught Makker how to solve an equation. Ask her what “the same on both sides” means." } }
 ];
+// Oppgaven på valgt språk (svarene er felles)
+function task(k){ const x = TASKS[k==null ? S.i : k]; return {answers:x.answers, ...x[LANG]}; }
 const SOLVE_TP = [30,20,12,6];   // poeng etter antall hint brukt
 const TEACH_TP = 25, THINK_TP = 3;
 
@@ -408,21 +588,21 @@ const CLASS = [
   {name:"Filip", tp:75, c:"--coral-soft"}
 ];
 const PAST = [
-  {day:"Man", levels:[0,2,1,3], taught:1, said:"Hvorfor man ganger før man plusser"},
-  {day:"Tir", levels:[1,1,0], taught:2, said:"At areal er lengde ganger bredde, med tegning"},
-  {day:"Ons", levels:[3,2,2,1,0], taught:1, said:"Hvordan man finner gjennomsnitt"}
+  {levels:[0,2,1,3], taught:1, nb:{day:"Man", said:"Hvorfor man ganger før man plusser"}, en:{day:"Mon", said:"Why you multiply before you add"}},
+  {levels:[1,1,0], taught:2, nb:{day:"Tir", said:"At areal er lengde ganger bredde, med tegning"}, en:{day:"Tue", said:"That area is length times width, with a drawing"}},
+  {levels:[3,2,2,1,0], taught:1, nb:{day:"Ons", said:"Hvordan man finner gjennomsnitt"}, en:{day:"Wed", said:"How to find an average"}}
 ];
 const BADGES = [
-  {id:"self", name:"Tenkte selv", desc:"Løs en oppgave uten hint", ico:"!", c:"--violet"},
-  {id:"teach", name:"Læreren", desc:"Lær Makker noe nytt", ico:"L", c:"--mint"},
-  {id:"grit", name:"Står på", desc:"Bruk alle tre hint og løs likevel", ico:"3", c:"--coral"},
-  {id:"voice", name:"Snakket ut", desc:"Forklar med stemmen", ico:"~", c:"--sun-dk"},
-  {id:"loud", name:"Tenker høyt", desc:"Svar Makker på et hint", ico:"?", c:"--violet-dk"},
-  {id:"all", name:"Tre på rad", desc:"Fullfør alle dagens oppgaver", ico:"3", c:"--mint-dk"}
+  {id:"self", ico:"!", c:"--violet", nb:["Tenkte selv","Løs en oppgave uten hint"], en:["Thought for myself","Solve a task with no hints"]},
+  {id:"teach", ico:"L", c:"--mint", nb:["Læreren","Lær Makker noe nytt"], en:["The Teacher","Teach Makker something new"]},
+  {id:"grit", ico:"3", c:"--coral", nb:["Står på","Bruk alle tre hint og løs likevel"], en:["Keeps going","Use all three hints and still solve it"]},
+  {id:"voice", ico:"~", c:"--sun-dk", nb:["Snakket ut","Forklar med stemmen"], en:["Spoke up","Explain with your voice"]},
+  {id:"loud", ico:"?", c:"--violet-dk", nb:["Tenker høyt","Svar Makker på et hint"], en:["Thinking aloud","Answer Makker on a hint"]},
+  {id:"all", ico:"3", c:"--mint-dk", nb:["Tre på rad","Fullfør alle dagens oppgaver"], en:["Three in a row","Finish all of today's tasks"]}
 ];
 
 // ---------- Tilstand ----------
-const S = { i:0, hint:0, solved:false, teaching:false, mode:null, tries:0, thinkPaid:0,
+const S = { i:0, hint:0, solved:false, teaching:false, mode:null, tries:0, thinkPaid:0, fb:null,
   today:[], taught:0, said:[], history:[], tp:140, streak:3, streakToday:false, badges:new Set(), lbMode:"vs" };
 
 const $ = id => document.getElementById(id);
@@ -441,12 +621,12 @@ $("tab-elev").onclick = () => showTab("elev");
 $("tab-forelder").onclick = () => showTab("forelder");
 
 // ---------- Poeng, nivå, streak ----------
-const LEVELS = ["Nysgjerrig","Tenker","Utforsker","Problemknuser","Mester","Legende"];
+function levelName(lv){ const L = tr("levels"); return L[Math.min(lv-1, L.length-1)]; }
 function renderHUD(){
   const lv = Math.floor(S.tp/100)+1, into = S.tp%100;
-  $("lvl").textContent = "Nv " + lv;
-  $("lvl-name").textContent = `Nivå ${lv} · ${LEVELS[Math.min(lv-1,LEVELS.length-1)]}`;
-  $("xp-text").textContent = `${100-into} TP til nivå ${lv+1}`;
+  $("lvl").textContent = tr("lvlShort", lv);
+  $("lvl-name").textContent = tr("lvlName", lv, levelName(lv));
+  $("xp-text").textContent = tr("xpText", 100-into, lv+1);
   $("xp-bar").style.width = into + "%";
   $("tp").textContent = S.tp;
   $("streak").textContent = S.streak;
@@ -459,7 +639,7 @@ function award(pts, label, anchor){
   const s = el("small",null,label); p.append(s);
   p.style.left = (r.left + r.width/2) + "px"; p.style.top = (r.top) + "px";
   document.body.append(p); setTimeout(()=>p.remove(), 1500);
-  if(Math.floor(S.tp/100) > before){ setTimeout(()=>{ toast("Nytt nivå! Du er nå " + LEVELS[Math.min(Math.floor(S.tp/100),LEVELS.length-1)] + "."); confetti(); }, 600); }
+  if(Math.floor(S.tp/100) > before){ setTimeout(()=>{ toast(tr("levelUp", levelName(Math.floor(S.tp/100)+1))); confetti(); }, 600); }
 }
 function toast(text){
   document.querySelectorAll(".toast").forEach(t=>t.remove());
@@ -469,14 +649,14 @@ function unlock(id){
   if(S.badges.has(id)) return;
   S.badges.add(id); renderBadges();
   const b = BADGES.find(x=>x.id===id);
-  setTimeout(()=>toast("Nytt merke: " + b.name), 900);
+  setTimeout(()=>toast(tr("newBadge", b[LANG][0])), 900);
 }
 function renderBadges(){
   const B=$("badges"); B.innerHTML="";
   BADGES.forEach(b=>{
     const d = el("div","badge"+(S.badges.has(b.id)?" got":""));
     const i = el("div","ico",b.ico); i.style.background = `var(${b.c})`;
-    const t = el("div"); t.append(el("b",null,b.name), el("span",null,b.desc));
+    const t = el("div"); t.append(el("b",null,b[LANG][0]), el("span",null,b[LANG][1]));
     d.append(i,t); B.append(d);
   });
 }
@@ -484,26 +664,26 @@ function renderBadges(){
 // ---------- Klasseliste ----------
 let lastRank = null;
 function renderBoard(flash){
-  const all = CLASS.map(c=>({...c})).concat([{name:"Ida (deg)", tp:S.tp, c:"--sun", me:true}]).sort((a,b)=>b.tp-a.tp);
+  const all = CLASS.map(c=>({...c})).concat([{name:"Ida", tp:S.tp, c:"--sun", me:true}]).sort((a,b)=>b.tp-a.tp);
   const B=$("board"); B.innerHTML="";
   const myRank = all.findIndex(x=>x.me)+1;
   all.forEach((p,k)=>{
     const li = el("li",(p.me?"me ":"")+(k<3?"top":""));
     if(p.me && flash && lastRank && myRank<lastRank) li.classList.add("flash");
     const a = el("div","ava",p.name[0]); a.style.background = `var(${p.c})`;
-    li.append(el("span","rank",String(k+1)), a, el("span","name",p.name), el("span","pts",p.tp+" TP"));
+    li.append(el("span","rank",String(k+1)), a, el("span","name",p.me ? tr("meName") : p.name), el("span","pts",p.tp+" TP"));
     B.append(li);
   });
-  if(flash && lastRank && myRank<lastRank) toast(`Du klatret til plass ${myRank}!`);
+  if(flash && lastRank && myRank<lastRank) toast(tr("climbed", myRank));
   lastRank = myRank;
   const ahead = all[myRank-2];
-  $("near").textContent = ahead ? `Du er ${ahead.tp - S.tp + 1} TP fra å gå forbi ${ahead.name}.` : "Du leder uka! Kan du lære bort noe til en klassekamerat?";
+  $("near").textContent = ahead ? tr("near", ahead.tp - S.tp + 1, ahead.name) : tr("leading");
   // Sammen-modus
   const total = all.reduce((s,p)=>s+p.tp,0), goal=1500;
   $("goal-num").textContent = total;
   $("goal-bar").style.width = Math.min(100,total/goal*100) + "%";
   const C=$("contrib"); C.innerHTML="";
-  all.slice().sort(()=>0).forEach(p=>{ C.append(el("span",p.me?"me":"",p.name.replace(" (deg)","")+" "+p.tp)); });
+  all.slice().sort(()=>0).forEach(p=>{ C.append(el("span",p.me?"me":"",p.name+" "+p.tp)); });
 }
 function setLb(m){
   S.lbMode=m;
@@ -534,79 +714,96 @@ function tick(){
 
 // ---------- Makker-ansikt og tale ----------
 function face(mood){ const f=$("face"); f.className = "makker " + (mood||""); }
-let voice = null;
+// Én stemme per språk: norsk tekst leses aldri med engelsk stemme, og omvendt
+const voices = {nb:null, en:null};
 function pickVoice(){
   try{
     const vs = speechSynthesis.getVoices();
-    voice = vs.find(v=>/^(nb|no|nn)\b/i.test(v.lang)) || vs.find(v=>/norsk|norw|bokm/i.test(v.name)) || null;
+    voices.nb = vs.find(v=>/^(nb|no|nn)\b/i.test(v.lang)) || vs.find(v=>/norsk|norw|bokm/i.test(v.name)) || null;
+    voices.en = vs.find(v=>/^en[-_]GB/i.test(v.lang)) || vs.find(v=>/^en\b/i.test(v.lang)) || null;
   }catch(e){}
 }
 try{ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }catch(e){}
-let voiceNoted = false;
+const voiceNoted = new Set();
 function voiceNote(){
-  if(voiceNoted) return; voiceNoted = true;
-  sys("Ingen norsk stemme på denne maskinen, så Makker leser ikke høyt.");
+  if(voiceNoted.has(LANG)) return; voiceNoted.add(LANG);
+  sys(tr("noVoice"));
 }
 function say(text){
   if(!$("speak-toggle").checked) return;
+  const voice = voices[LANG];
   if(!voice){ voiceNote(); return; }
   try{
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = voice.lang || "nb-NO"; u.voice = voice; u.rate = 1.02;
+    u.lang = voice.lang || (LANG==="en" ? "en-GB" : "nb-NO"); u.voice = voice; u.rate = 1.02;
     u.onstart = () => $("face").classList.add("talking");
     u.onend = u.onerror = () => $("face").classList.remove("talking");
     speechSynthesis.speak(u);
   }catch(e){}
 }
-function makker(text, mood){
+// lang: språket teksten er skrevet på. Byttet Ida språk mens Makker tenkte, leses svaret ikke høyt.
+function makker(text, mood, lang){
   const m = el("div","msg m",text); $("chat").append(m); scrollChat();
-  if(mood!==undefined) face(mood); say(text); return m;
+  if(mood!==undefined) face(mood);
+  if(!lang || lang===LANG) say(text);
+  return m;
 }
 function me(text){ $("chat").append(el("div","msg e",text)); scrollChat(); }
 function sys(text){ $("chat").append(el("div","msg sys",text)); scrollChat(); }
 function scrollChat(){ const c=$("chat"); c.scrollTop = c.scrollHeight; }
 
 // ---------- Oppgave ----------
-function renderTask(){
-  const t = TASKS[S.i];
+function renderTaskText(){
+  const t = task();
   const p = $("progress"); p.innerHTML="";
   TASKS.forEach((_,k)=>{ const b=el("i",k<S.i?"done":(k===S.i?"now":""),String(k+1)); p.append(b); });
   p.append(el("span",null,t.topic));
   $("task-text").innerHTML = t.html;
+}
+function greet(){ makker(tr(S.i===0 ? "greetFirst" : "greetNext"), ""); }
+function renderTask(){
+  renderTaskText();
   $("answer").value=""; $("answer").disabled=false;
-  $("feedback").textContent=""; $("feedback").className="feedback";
+  setFeedback(null);
   renderLadder();
   $("chat").innerHTML="";
   $("teach").hidden=true; $("next").hidden=true; S.mode=null; S.thinkPaid=0;
   face("");
-  makker(S.i===0 ? "Hei Ida! Klar for dagens tre? Prøv selv først. Står du fast, hjelper jeg litt om gangen."
-                 : "Ny oppgave! Ta den i ditt tempo.", "");
+  greet();
 }
+function setFeedback(key, arg, cls){ S.fb = key ? {key, arg, cls} : null; renderFeedback(); }
+function renderFeedback(){
+  const f = $("feedback");
+  f.textContent = S.fb ? tr(S.fb.key, S.fb.arg) : "";
+  f.className = "feedback" + (S.fb && S.fb.cls ? " " + S.fb.cls : "");
+}
+function renderPlaceholder(){ $("explain").placeholder = tr(S.mode==="hint" ? "hintPh" : "teachPh"); }
+function renderNext(){ $("next").textContent = tr(S.i < TASKS.length-1 ? "nextTask" : "seeParent"); }
 function renderLadder(){
-  const t = TASKS[S.i], L=$("ladder"); L.innerHTML="";
+  const t = task(), L=$("ladder"); L.innerHTML="";
   t.hints.forEach((h,k)=>{
     const li = el("li","rung"+(k<S.hint?" open":""));
     const b = el("b",null,String(k+1));
     const d = el("div");
     d.append(el("small",null,h[0]));
-    d.append(document.createTextNode(k<S.hint ? h[1] : "Låst til du trenger det"));
+    d.append(document.createTextNode(k<S.hint ? h[1] : tr("locked")));
     li.append(b,d, el("em",null, SOLVE_TP[k+1]+" TP"));
     L.append(li);
   });
-  $("stuck").textContent = S.hint>=3 ? "Ingen flere hint" : "Jeg står fast";
+  $("stuck").textContent = tr(S.hint>=3 ? "noMoreHints" : "stuck");
   $("stuck").disabled = S.hint>=3 || S.solved;
 }
 $("stuck").onclick = () => {
   if(S.hint>=3||S.solved) return;
   S.hint++; renderLadder();
-  const t = TASKS[S.i], h = t.hints[S.hint-1][1];
-  const lead = ["Bra at du sier ifra! ","OK, et tips: ","Se på dette eksempelet: "][S.hint-1];
-  const tail = S.hint===1 ? " Svar meg her nede." : " Hva tenker du nå?";
+  const t = task(), h = t.hints[S.hint-1][1];
+  const lead = tr("hintLeads")[S.hint-1];
+  const tail = tr(S.hint===1 ? "hintTail1" : "hintTail");
   makker(lead + h + tail, "");
   S.mode = "hint"; S.tries = 0;
   S.history = [{role:"assistant", content: lead + h}];
-  $("explain").placeholder = "Svar Makker, snakk eller skriv …";
+  renderPlaceholder();
   $("teach").hidden = false; $("explain").value = ""; $("explain").focus();
 };
 
@@ -614,35 +811,33 @@ function norm(s){ return s.toLowerCase().replace(/\s+/g,"").replace(",","."); }
 $("answer-form").onsubmit = e => {
   e.preventDefault();
   if(S.solved) return;
-  const t = TASKS[S.i], v = norm($("answer").value);
+  const t = task(), v = norm($("answer").value);
   if(!v) return;
   if(t.answers.map(norm).includes(v)){
     S.solved = true;
     S.today.push(S.hint);
     const pts = SOLVE_TP[S.hint];
-    $("feedback").textContent = S.hint===0 ? "Riktig, helt uten hint!" : `Riktig! Du brukte ${S.hint} av 3 hint.`;
-    $("feedback").className = "feedback good";
+    if(S.hint===0) setFeedback("right0", null, "good"); else setFeedback("rightN", S.hint, "good");
     $("answer").disabled = true; renderLadder();
     confetti();
-    award(pts, S.hint===0 ? "Tenkte selv" : "Løst", $("answer"));
-    if(!S.streakToday){ S.streakToday = true; S.streak++; renderHUD(); setTimeout(()=>toast(`${S.streak} dager på rad!`), 1600); }
+    award(pts, tr(S.hint===0 ? "popSelf" : "popSolved"), $("answer"));
+    if(!S.streakToday){ S.streakToday = true; S.streak++; renderHUD(); setTimeout(()=>toast(tr("streakToast", S.streak)), 1600); }
     if(S.hint===0) unlock("self");
     if(S.hint===3) unlock("grit");
     startTeaching();
   } else {
-    $("feedback").textContent = "Ikke helt. Feil koster ingenting. Prøv igjen eller ta et hint.";
-    $("feedback").className = "feedback bad";
+    setFeedback("wrongAns", null, "bad");
     const f=$("answer-form"); f.classList.remove("shake"); void f.offsetWidth; f.classList.add("shake");
   }
 };
 
 // ---------- Lær bort til Makker ----------
 function startTeaching(){
-  const t = TASKS[S.i];
+  const t = task();
   S.teaching = true; S.tries = 0; S.mode = "teach";
   S.history = [{role:"assistant", content:t.wrong}];
-  $("explain").placeholder = "Forklar for Makker med egne ord …";
-  sys(`Rollebytte! Lær Makker det, og få +${TEACH_TP} TP`);
+  renderPlaceholder();
+  sys(tr("swap", TEACH_TP));
   makker(t.wrong, "confused");
   $("teach").hidden = false; $("explain").value="";
 }
@@ -657,26 +852,26 @@ async function sendExplain(){
   me(txt); $("explain").value=""; $("send").disabled = true;
   S.tries++;
   S.history.push({role:"user", content:txt});
-  const t = TASKS[S.i];
+  const t = task(), lang = LANG;
   let res = null;
   if(sampleFn){
-    const thinking = el("div","msg m thinking","Makker tenker …"); $("chat").append(thinking); scrollChat();
+    const thinking = el("div","msg m thinking",tr("thinking")); $("chat").append(thinking); scrollChat();
     try{ res = await askClaude(t); }catch(e){ res = null; if(e && (e.code==="not_granted"||e.code==="sampling_disabled")) setLive(false); }
     thinking.remove();
   }
   if(!res) res = scripted(t, txt);
   S.history.push({role:"assistant", content:res.reply});
-  makker(res.reply, res.understood ? "happy" : "confused");
+  makker(res.reply, res.understood ? "happy" : "confused", lang);
   if(res.understood){
     S.teaching=false; S.taught++;
-    S.said.push({topic:t.topic, text:res.summary || t.sum});
+    S.said.push({i:S.i, text:res.summary || null});
     $("teach").hidden = true;
     confetti();
-    award(TEACH_TP, "Lærer-bonus", $("send"));
+    award(TEACH_TP, tr("teachBonus"), $("send"));
     unlock("teach");
     $("next").hidden = false;
-    if(S.i < TASKS.length-1){ $("next").textContent = "Neste oppgave"; }
-    else { $("next").textContent = "Se forelderkortet"; unlock("all"); setTimeout(()=>toast("Alle tre ferdig. Sterkt jobba!"), 1800); }
+    renderNext();
+    if(S.i === TASKS.length-1){ unlock("all"); setTimeout(()=>toast(tr("allDone")), 1800); }
   }
   $("send").disabled = false;
 }
@@ -689,10 +884,10 @@ async function hintReply(txt){
   me(txt); $("explain").value=""; $("send").disabled = true;
   S.tries++;
   S.history.push({role:"user", content:txt});
-  const t = TASKS[S.i];
+  const t = task(), lang = LANG;
   let reply = null;
   if(sampleFn){
-    const thinking = el("div","msg m thinking","Makker tenker …"); $("chat").append(thinking); scrollChat();
+    const thinking = el("div","msg m thinking",tr("thinking")); $("chat").append(thinking); scrollChat();
     try{
       const convo = S.history.map(h => (h.role==="user"?"Ida: ":"Makker: ") + h.content).join("\n");
       const r = await sampleFn(
@@ -702,7 +897,7 @@ Hun har bedt om hint nummer ${S.hint} av 3: «${t.hints[S.hint-1][1]}»
 Samtalen så langt:
 ${convo}
 
-Svar Ida på norsk bokmål, maks 2 korte setninger, i en tone som passer en 13-åring (ikke barnslig). Er hun på rett spor: bekreft konkret hva som er riktig og be henne ta neste steg selv. Er hun på feil spor: still ett lite, enklere spørsmål som leder henne videre. Ikke gi svaret, ikke regn ut siste steg. Bare selve svaret, ingen anførselstegn.`,
+Svar Ida på ${tr("aiLang")}, maks 2 korte setninger, i en tone som passer en 13-åring (ikke barnslig). Er hun på rett spor: bekreft konkret hva som er riktig og be henne ta neste steg selv. Er hun på feil spor: still ett lite, enklere spørsmål som leder henne videre. Ikke gi svaret, ikke regn ut siste steg. Bare selve svaret, ingen anførselstegn.`,
         {modelTier:"quick", cache:false});
       reply = r.text.trim();
     }catch(e){ if(e && (e.code==="not_granted"||e.code==="sampling_disabled")) setLive(false); }
@@ -711,15 +906,11 @@ Svar Ida på norsk bokmål, maks 2 korte setninger, i en tone som passer en 13-�
   const low = txt.toLowerCase();
   const hit = t.keys.some(k=>low.includes(k));
   if(!reply){
-    reply = hit
-      ? "Ja, nettopp! Bruk det på oppgaven og skriv svaret ditt i feltet."
-      : (S.tries===1
-          ? "Godt at du tenker høyt! Se på oppgaven en gang til. Hva er det første du må gjøre?"
-          : "Helt greit å stå fast. Prøv et svar, eller trykk «Jeg står fast» for neste trinn.");
+    reply = STR[lang][hit ? "hintHit" : (S.tries===1 ? "hintMiss1" : "hintMiss2")];
   }
   S.history.push({role:"assistant", content:reply});
-  makker(reply, hit ? "happy" : "");
-  if(S.thinkPaid < 2 && txt.length > 3){ S.thinkPaid++; award(THINK_TP, "Tenkte høyt", $("send")); unlock("loud"); }
+  makker(reply, hit ? "happy" : "", lang);
+  if(S.thinkPaid < 2 && txt.length > 3){ S.thinkPaid++; award(THINK_TP, tr("thinkAloud"), $("send")); unlock("loud"); }
   $("send").disabled = false;
 }
 
@@ -728,7 +919,7 @@ function scripted(t, txt){
   const hit = t.keys.some(k=>low.includes(k));
   if(hit && txt.length>12) return {understood:true, reply:t.aha};
   if(S.tries===1) return {understood:false, reply:t.follow};
-  if(S.tries===2) return {understood:false, reply:"Hmm, jeg henger ikke helt med. Kan du forklare det med et eksempel?"};
+  if(S.tries===2) return {understood:false, reply:tr("confused")};
   return {understood:true, reply:t.aha};
 }
 
@@ -739,9 +930,12 @@ $("next").onclick = () => {
 
 // ---------- Ekte Claude når siden kjører som artefakt ----------
 let sampleFn = null;
+function renderMode(){
+  const p=$("mode-pill"); p.textContent = tr(sampleFn ? "live" : "practice"); p.className = "mode-pill" + (sampleFn?" live":"");
+}
 function setLive(on){
-  const p=$("mode-pill"); p.textContent = on ? "Ekte KI" : "Øvingsmodus"; p.className = "mode-pill" + (on?" live":"");
   if(!on) sampleFn = null;
+  renderMode();
 }
 (async()=>{
   try{ if(window.claude && claude.use){ const s = await claude.use("sample"); if(s){ sampleFn = s; setLive(true); } } }catch(e){}
@@ -759,10 +953,10 @@ Samtalen så langt:
 ${convo}
 
 Regler:
-- Svar på norsk bokmål, maks 2 korte setninger, varmt og nysgjerrig, i en tone som passer en 13-åring.
+- Svar på ${tr("aiLang")}, maks 2 korte setninger, varmt og nysgjerrig, i en tone som passer en 13-åring.
 - Ikke gi Ida svaret eller forklaringen selv. Er forklaringen hennes uklar eller feil, still ett konkret oppfølgingsspørsmål eller vis at du fortsatt er forvirret.
 - Sett understood=true bare når Ida har forklart kjerneideen med egne ord (det trenger ikke være perfekt). Da sier Makker «aha» og gjentar kort hva han lærte.
-- summary: én nøytral linje til forelderen om HVA Ida forklarte (ikke sitat, ikke vurdering av henne). Tom streng hvis understood=false.
+- summary: én nøytral linje til forelderen om HVA Ida forklarte (ikke sitat, ikke vurdering av henne), skrevet på ${tr("aiLang")}. Tom streng hvis understood=false.
 Svar KUN med JSON: {"reply":"...","understood":true|false,"summary":"..."}`;
   const r = await sampleFn.json(prompt, {modelTier:"quick", cache:false});
   if(!r || typeof r.reply!=="string") return null;
@@ -774,8 +968,12 @@ const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 let rec = null, listening = false, baseText = "", usedVoice = false;
 function micNote(t){ $("mic-note").hidden = !t; $("mic-note").textContent = t||""; }
 function stopMic(){ if(rec && listening){ try{ rec.stop(); }catch(e){} } }
+function renderSrLangs(){
+  const sel = $("sr-lang"); sel.innerHTML = "";
+  tr("srLangs").forEach(([v,label])=>{ const o = el("option",null,label); o.value = v; sel.append(o); });
+}
 $("mic").onclick = () => {
-  if(!SR){ micNote("Tale virker i Google Chrome eller Edge. Skriv i feltet i stedet."); return; }
+  if(!SR){ micNote(tr("noSR")); return; }
   if(listening){ stopMic(); return; }
   try{ speechSynthesis.cancel(); }catch(e){}
   rec = new SR(); rec.lang = $("sr-lang").value; rec.interimResults = true; rec.continuous = true;
@@ -785,35 +983,34 @@ $("mic").onclick = () => {
     for(let k=0;k<ev.results.length;k++){ const r=ev.results[k]; (r.isFinal? (fin+=r[0].transcript) : (tmp+=r[0].transcript)); }
     $("explain").value = baseText + fin + tmp; usedVoice = true;
   };
-  rec.onstart = () => { listening=true; $("mic").classList.add("on"); $("mic-label").textContent="Stopp"; micNote("Jeg lytter … snakk i vei."); };
-  rec.onend = () => { listening=false; $("mic").classList.remove("on"); $("mic-label").textContent="Snakk"; if(!$("mic-note").dataset.err) micNote(""); };
+  rec.onstart = () => { listening=true; $("mic").classList.add("on"); $("mic-label").textContent=tr("stop"); micNote(tr("listening")); };
+  rec.onend = () => { listening=false; $("mic").classList.remove("on"); $("mic-label").textContent=tr("talk"); if(!$("mic-note").dataset.err) micNote(""); };
   rec.onerror = ev => {
     $("mic-note").dataset.err = "1";
-    micNote(ev.error==="not-allowed"||ev.error==="service-not-allowed"
-      ? "Mikrofonen er ikke tillatt her. Åpne filen i Google Chrome for å snakke, eller skriv i feltet."
-      : "Fikk ikke tak i talen. Prøv igjen, eller skriv i feltet.");
+    micNote(tr(ev.error==="not-allowed"||ev.error==="service-not-allowed" ? "micBlocked" : "srFail"));
     setTimeout(()=>{ delete $("mic-note").dataset.err; }, 50);
   };
-  try{ rec.start(); }catch(e){ micNote("Kunne ikke starte mikrofonen. Skriv i feltet i stedet."); }
+  try{ rec.start(); }catch(e){ micNote(tr("micFail")); }
 };
 
 // ---------- Forelder ----------
 function renderParent(){
-  const days = PAST.concat([{day:"I dag", levels:S.today, taught:S.taught, today:true}]);
+  const days = PAST.map(p=>({levels:p.levels, taught:p.taught, day:p[LANG].day}))
+    .concat([{day:tr("today"), levels:S.today, taught:S.taught, today:true}]);
   const W=$("week"); W.innerHTML="";
   let all=[], taught=0;
   days.forEach(d=>{
     all = all.concat(d.levels); taught += d.taught;
     const c = el("div","day"+(d.today?" today":""));
-    const h = el("h3",null,d.day); if(d.today) h.append(el("em",null,"Live"));
+    const h = el("h3",null,d.day); if(d.today) h.append(el("em",null,tr("liveTag")));
     c.append(h);
     const n = d.levels.length;
-    const st1 = el("div","stat"); st1.append(el("span",null,"Løst"), el("b",null,String(n))); c.append(st1);
-    const st2 = el("div","stat"); st2.append(el("span",null,"Forklart"), el("b",null,String(d.taught))); c.append(st2);
+    const st1 = el("div","stat"); st1.append(el("span",null,tr("solvedStat")), el("b",null,String(n))); c.append(st1);
+    const st2 = el("div","stat"); st2.append(el("span",null,tr("taughtStat")), el("b",null,String(d.taught))); c.append(st2);
     const m = el("div","meter");
     if(n){ [0,1,2,3].forEach(lv=>{ const cnt=d.levels.filter(x=>x===lv).length; if(cnt){ const i=el("i","c"+lv); i.style.width=(cnt/n*100)+"%"; m.append(i);} }); }
     c.append(m);
-    if(!n && d.today) c.append(el("p","fine","Ingen oppgaver ennå i dag."));
+    if(!n && d.today) c.append(el("p","fine",tr("noTasksYet")));
     W.append(c);
   });
   $("k-solved").textContent = all.length;
@@ -821,13 +1018,41 @@ function renderParent(){
   $("k-taught").textContent = taught;
   $("k-tp").textContent = S.tp;
   const L=$("said"); L.innerHTML="";
-  const items = S.said.map(s=>({when:"I dag · "+s.topic, text:s.text})).reverse()
-    .concat(PAST.slice().reverse().map(p=>({when:p.day, text:p.said})));
+  const items = S.said.map(s=>({when:tr("today")+" · "+task(s.i).topic, text:s.text || task(s.i).sum})).reverse()
+    .concat(PAST.slice().reverse().map(p=>({when:p[LANG].day, text:p[LANG].said})));
   items.slice(0,4).forEach(it=>{ const li=el("li"); li.append(el("small",null,it.when), document.createTextNode(it.text)); L.append(li); });
-  const last = S.said.length ? TASKS.find(t=>t.topic===S.said[S.said.length-1].topic) : null;
-  $("starter").textContent = last ? last.starter : "Ida forklarte gjennomsnitt til Makker på onsdag. Spør henne hva som er gjennomsnittlig leggetid i familien deres.";
+  const last = S.said.length ? S.said[S.said.length-1] : null;
+  $("starter").textContent = last ? task(last.i).starter : tr("defaultStarter");
 }
 
-renderHUD(); renderBadges(); renderBoard(false); renderTask();
+// ---------- Bytt språk ----------
+function applyLang(regreet){
+  document.documentElement.lang = LANG;
+  $("lang-nb").setAttribute("aria-pressed", LANG==="nb");
+  $("lang-en").setAttribute("aria-pressed", LANG==="en");
+  document.querySelectorAll("[data-i18n]").forEach(e=>{ e.textContent = tr(e.dataset.i18n); });
+  document.querySelectorAll("[data-i18n-ph]").forEach(e=>{ e.placeholder = tr(e.dataset.i18nPh); });
+  document.querySelectorAll("[data-i18n-aria]").forEach(e=>{ e.setAttribute("aria-label", tr(e.dataset.i18nAria)); });
+  document.querySelectorAll("[data-i18n-title]").forEach(e=>{ e.title = tr(e.dataset.i18nTitle); });
+  renderSrLangs(); renderMode();
+  renderHUD(); renderBadges(); renderBoard(false);
+  renderTaskText(); renderLadder(); renderFeedback(); renderPlaceholder(); renderNext();
+  $("mic-label").textContent = tr(listening ? "stop" : "talk"); micNote("");
+  if(!$("view-forelder").hidden) renderParent();
+  // Har Ida ikke begynt på oppgaven ennå, hilser Makker på nytt på det nye språket.
+  // Ellers står samtalen som den er, og Makker fortsetter på det nye språket.
+  if(regreet && S.mode===null && !S.solved){ $("chat").innerHTML=""; greet(); }
+}
+function setLang(l){
+  if(l===LANG) return;
+  LANG = l;
+  try{ localStorage.setItem("tenkemakker-lang", l); }catch(e){}
+  stopMic(); try{ speechSynthesis.cancel(); }catch(e){}
+  applyLang(true);
+}
+$("lang-nb").onclick = () => setLang("nb");
+$("lang-en").onclick = () => setLang("en");
+
+applyLang(false); renderTask();
 })();
 </script>

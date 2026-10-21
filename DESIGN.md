@@ -66,7 +66,8 @@ Single file `index.html`. Three tasks (fractions, percent, equations), each with
 
 - Published as a Claude artifact: Makker uses real Claude (`sample`, quick tier) for hint replies and judging Ida's explanation (returns `reply`, `understood`, `summary`).
 - As a local file: scripted replies via keyword matching ("Øvingsmodus").
-- Voice in: browser `SpeechRecognition` (Google Chrome/Edge, local file only; audio goes to Google's speech service). Voice out: `speechSynthesis`, Norwegian voice only.
+- Languages: Norwegian bokmål (default) and English, NO/EN toggle in the header.
+- Voice in: browser `SpeechRecognition` (Google Chrome/Edge, local file only; audio goes to Google's speech service). Voice out: `speechSynthesis`, with a voice matching the chosen language.
 
 ## 5. Known gaps
 
@@ -91,3 +92,4 @@ Real accounts, real pupil data, school integrations (Feide, LMS), content beyond
 - **v1** (10:50): hint ladder, teach-back, parent week card, voice in/out, real/scripted Makker.
 - **v1.1**: answer hints in the chat; speech language picker; no English voice for Norwegian.
 - **v2** (11:20): joyful game design, TP, levels, streak, badges, class board with competition/cooperation toggle.
+- **v2.1**: English alongside Norwegian bokmål. NO/EN toggle in the header (remembered between visits); tasks, hints, Makker (scripted and real Claude), badges, class board and parent card are all translated. Speech in/out follows the chosen language.
