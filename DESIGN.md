@@ -68,7 +68,7 @@ Single file `index.html`. Three tasks (fractions, percent, equations), each with
 
 - Published as a Claude artifact: Makker uses real Claude (`sample`, quick tier) for hint replies and judging Ida's explanation (returns `reply`, `understood`, `summary`).
 - As a local file: scripted replies via keyword matching ("Øvingsmodus").
-- Voice in: **off by default** (privacy, decided 11:57). Opt-in under "Lyd" with a plain warning; uses browser `SpeechRecognition`, where audio goes to Google's speech service. Voice out: `speechSynthesis`, on-device (`localService`) Norwegian voices only, so no text leaves the device.
+- Voice in: **off by default** (privacy, decided 11:57). Opt-in under "Lyd" with a plain warning; press-and-hold the mic to talk, release to send; uses browser `SpeechRecognition`, where audio goes to Google's speech service. Voice out: `speechSynthesis`, on-device (`localService`) Norwegian voices only, so no text leaves the device.
 
 ## 5. Known gaps
 
@@ -119,3 +119,4 @@ Browser ──▶ Cloudflare Access (email login, one-time code)
 - **v2.1** (12:00): Cloudflare hosting with email login; server-side Makker.
 - **v2.2** (12:05): less effort + mobile: quick-reply chips (Vet ikke / Neste hint / Jeg prøver selv), sentence starters for teaching, one big mic that auto-sends when Ida stops talking, sound settings tucked away, chat-style reply bar, bottom menu on phones (Oppgave / Klassen / Forelder), viewport fix.
 - **v2.3** (12:00): voice input off by default (opt-in with warning), read-aloud on-device only; badge "Snakket ut" replaced by "Krystallklar" (Makker understood on first explanation).
+- **v2.4** (12:05): press-and-hold to talk (hold the mic, release to send; works with mouse, touch and keyboard). Voice still opt-in.
