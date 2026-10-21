@@ -21,3 +21,8 @@ Ida (13 år, oppdiktet elev) får hjelp med matte uten å få fasit:
 - Lokalt svarer Makker med forhåndsskrevne svar. Som publisert Claude-artefakt svarer ekte Claude.
 
 All data er oppdiktet.
+
+## For contributors
+
+- `DESIGN.md`: problem, principles, what is built, open questions.
+- `AGENTS.md`: rules and workflow for coding agents.
