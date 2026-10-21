@@ -2,7 +2,9 @@
 
 *Living document. Last updated 21 Oct 2026, 11:25, after version 2.*
 Open decisions: see the **Tenkemakker decision board**: https://claude.ai/artifact/VQuDcDWzBJ1KyeXvmGVTLi (shared Claude artifact; the team updates it live).
-App (published): https://claude.ai/artifact/5ojWwQoxmE9ALVXC98YUMy This document records what we've built and why; the board holds what we haven't decided.
+App (published): https://claude.ai/artifact/5ojWwQoxmE9ALVXC98YUMy
+
+This document records what we've built and why; the board holds what we haven't decided.
 
 ## 1. The problem
 
@@ -78,6 +80,26 @@ Single file `index.html`. Three tasks (fractions, percent, equations), each with
 ## 6. Out of scope today
 
 Real accounts, real pupil data, school integrations (Feide, LMS), content beyond the three demo tasks, a backend.
+
+## 6b. After today: hosting on Cloudflare (planned)
+
+Decided 11:42: deploy to Cloudflare after the event, with login by email.
+
+```
+Browser ──▶ Cloudflare Access (email login, one-time code)
+              ├──▶ Static page: index.html (Pages / Workers static assets)
+              └──▶ /api/makker  (Worker) ──▶ Anthropic API
+                                   ▲
+                       ANTHROPIC_API_KEY as a Worker secret
+```
+
+- **No secrets in the HTML.** The page calls `/api/makker`; only the Worker holds the API key (Cloudflare secret, never in Git).
+- **Login:** Cloudflare Access with email one-time PIN in front of both the page and the API. Allow-list the team's emails first. No login code in the app.
+- **Fixed prompts server-side.** The page sends task id, mode (hint / teach) and conversation; the Worker builds the Makker prompt. Nobody can use the endpoint as a general-purpose Claude.
+- **Limits:** spend cap on the API key in the Anthropic Console, rate limit per user, short `max_tokens`, no logging of what children write or say.
+- **Voice works** here (a normal web page, not an artifact frame), so voice input and real Claude finally work together.
+- **The page keeps a fallback:** artifact `sample` → `/api/makker` → scripted replies, in that order.
+- **Before real children use it:** children's emails are personal data. That needs parental consent and a data processing agreement with Anthropic (and Google, for browser speech). For schools, Feide login instead of email.
 
 ## 7. Demo outline (5 min)
 
