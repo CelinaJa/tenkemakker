@@ -116,3 +116,5 @@ Browser ──▶ Cloudflare Access (email login, one-time code)
 - **v1** (10:50): hint ladder, teach-back, parent week card, voice in/out, real/scripted Makker.
 - **v1.1**: answer hints in the chat; speech language picker; no English voice for Norwegian.
 - **v2** (11:20): joyful game design, TP, levels, streak, badges, class board with competition/cooperation toggle.
+- **v2.1** (12:00): Cloudflare hosting with email login; server-side Makker.
+- **v2.2** (12:05): less effort + mobile: quick-reply chips (Vet ikke / Neste hint / Jeg prøver selv), sentence starters for teaching, one big mic that auto-sends when Ida stops talking, sound settings tucked away, chat-style reply bar, bottom menu on phones (Oppgave / Klassen / Forelder), viewport fix.
