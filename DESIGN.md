@@ -81,9 +81,12 @@ Single file `index.html`. Three tasks (fractions, percent, equations), each with
 
 Real accounts, real pupil data, school integrations (Feide, LMS), content beyond the three demo tasks, a backend.
 
-## 6b. After today: hosting on Cloudflare (planned)
+## 6b. Hosting on Cloudflare (live for the demo)
 
-Decided 11:42: deploy to Cloudflare after the event, with login by email.
+Decided 11:42, deployed 12:00: **https://tenkemakker.ethlo.com**, login by email one-time code.
+Worker source: `worker/worker.js`. The Worker fetches `index.html` from this repo's `main`, so **`git push` updates the site** (within ~20 s).
+Access app "Tenkemakker demo": allow-list = ccode@ethlo.com (add team emails in Zero Trust → Access → Applications).
+The `ANTHROPIC_API_KEY` secret is added by hand in the dashboard; until then the hosted app runs in Øvingsmodus.
 
 ```
 Browser ──▶ Cloudflare Access (email login, one-time code)
